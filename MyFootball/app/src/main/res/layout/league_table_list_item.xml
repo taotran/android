@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="*">
+    <TableRow android:layout_width="0dp">
+        <TextView
+            android:id="@+id/positionTextView"
+            android:layout_width="0dp"
+            android:text="1" />
+
+        <TextView
+            android:id="@+id/clubName1TextView"
+            android:layout_width="0dp"
+            android:text="Manchester United" />
+
+        <TextView android:id="@+id/numberOfPlayedGamesTextView"
+            android:layout_width="0dp"
+            android:text="38"/>
+
+        <TextView
+            android:id="@+id/clubPointsTextView"
+            android:layout_width="0dp"
+            android:text="100" />
+    </TableRow>
+</TableLayout>

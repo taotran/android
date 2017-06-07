@@ -1,45 +1,45 @@
 package vn.com.tvtran.myfootball.entity.task;
 
-import android.os.AsyncTask;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Future;
 
-import vn.com.tvtran.myfootball.entity.Example;
+import vn.com.tvtran.myfootball.entity.League;
+import vn.com.tvtran.myfootball.entity.constant.ServiceURLs;
 
 /**
  * Created by tvtran on 2/2/2017.
  */
 
-public class LeagueLoadAsyncTask extends AsyncTask<Void, Void, List<Example>> {
-    private static final String URL = "http://api.football-data.org/v1/soccerseasons";
+public class LeagueLoadAsyncTask extends MFAsyncTask<Void, Void, List<League>> {
+
+    protected LeagueLoadAsyncTask() {
+        super(ServiceURLs.LEAGUES_URL);
+    }
 
     @Override
-    protected List<Example> doInBackground(Void... params) {
-        try {
+    protected List<League> doInBackground(Void... params) {
+        return super.doInBackground(params);
+    }
 
-            AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-
-            Future<Response> response = asyncHttpClient.prepareGet(URL).addHeader("X-Auth-Token", "6ac45b6fb72643498e9d869610436b8d").execute();
-
-            Response r = response.get();
-            String formattedResult = r.getResponseBody().replace("_links", "links");
-            ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            final List<Example> examples = mapper.readValue(formattedResult, new TypeReference<List<Example>>() {
-            });
-            System.out.println(examples.get(1).getCaption());
-            System.out.println(examples.get(1).getNumberOfTeams());
-            return examples;
-        } catch (Exception e) {
-            e.printStackTrace();
+    @Override
+    protected List<League> getResultFromReader(JsonReader reader) {
+        final JsonParser parser = new JsonParser();
+        final List<JsonObject> jsonLeagues = convertJsonArrayToList((JsonArray) parser
+                .parse(reader));
+        final List<League> leagues = new ArrayList<>();
+        for (JsonObject object : jsonLeagues) {
+            leagues.add(new League(object));
         }
+        return leagues;
+    }
+
+    @Override
+    protected List<League> getEmptyResult() {
         return new ArrayList<>();
     }
 

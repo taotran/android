@@ -3,7 +3,6 @@ package vn.com.tvtran.myfootball.fragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,18 +10,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
-
 import java.util.List;
-import java.util.concurrent.Future;
 
 import vn.com.tvtran.myfootball.R;
-import vn.com.tvtran.myfootball.entity.Example;
-import vn.com.tvtran.myfootball.entity.adapter.ExampleAdapter;
+import vn.com.tvtran.myfootball.entity.League;
+import vn.com.tvtran.myfootball.entity.adapter.LeagueAdapter;
 import vn.com.tvtran.myfootball.entity.task.LeagueLoadAsyncTask;
 
 /**
@@ -30,8 +22,6 @@ import vn.com.tvtran.myfootball.entity.task.LeagueLoadAsyncTask;
  */
 
 public class LeagueChooser extends Fragment {
-    private static final String URL = "http://football-data.org/v1/soccerseasons";
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,21 +39,75 @@ public class LeagueChooser extends Fragment {
         final ListView lv = (ListView) getActivity().findViewById(R.id.league_list_view);
         new LeagueLoadAsyncTask() {
             @Override
-            protected void onPostExecute(final List<Example> examples) {
-                super.onPostExecute(examples);
-                lv.setAdapter(new ExampleAdapter(getActivity(), examples));
+            protected void onPostExecute(final List<League> leagues) {
+                super.onPostExecute(leagues);
+                lv.setAdapter(new LeagueAdapter(getActivity(), leagues));
+
 
                 lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Example example = examples.get(position);
-                        System.out.println(example);
+                        final League league = leagues.get(position);
+                        final LeagueTableFragment leagueTableFragmentFragment = new LeagueTableFragment();
+                        final Bundle arguments = new Bundle();
+                        //final String fixtureLink = league.getLinks().getFixtures().getHref();
+                        //System.out.println(fixtureLink);
+                        arguments.putInt("leagueId", league.getId());
+                        leagueTableFragmentFragment.setArguments(arguments);
                         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.fragment_container, new ClubChooser());
+                        fragmentTransaction.replace(R.id.fragment_container, leagueTableFragmentFragment);
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                     }
                 });
+
+//                lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//                    @Override
+//                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                        final League league = leagues.get(position);
+//                        final LeagueFixtureFragment leagueFixtureFragmentFragment = new LeagueFixtureFragment();
+//                        final Bundle arguments = new Bundle();
+//                        arguments.putInt("leagueId", league.getId());
+//                        leagueFixtureFragmentFragment.setArguments(arguments);
+//                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+//                        fragmentTransaction.replace(R.id.fragment_container, leagueFixtureFragmentFragment);
+//                        fragmentTransaction.addToBackStack(null);
+//                        fragmentTransaction.commit();
+//                        return true;
+//                    }
+//                });
+
+                lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        final League league = leagues.get(position);
+                        final ExpandableFixtureFragment leagueFixtureFragmentFragment = new ExpandableFixtureFragment();
+                        final Bundle arguments = new Bundle();
+                        arguments.putInt("leagueId", league.getId());
+                        leagueFixtureFragmentFragment.setArguments(arguments);
+                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, leagueFixtureFragmentFragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                        return true;
+                    }
+                });
+
+//                lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//                    @Override
+//                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                        final League_ league = leagues.get(position);
+//                        final ClubChooser clubChooserFragment = new ClubChooser();
+//                        final Bundle arguments = new Bundle();
+//                        arguments.putInt("leagueId", league.getId());
+//                        clubChooserFragment.setArguments(arguments);
+//                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+//                        fragmentTransaction.replace(R.id.fragment_container, clubChooserFragment);
+//                        fragmentTransaction.addToBackStack(null);
+//                        fragmentTransaction.commit();
+//                        return true;
+//                    }
+//                });
             }
         }.execute();
 

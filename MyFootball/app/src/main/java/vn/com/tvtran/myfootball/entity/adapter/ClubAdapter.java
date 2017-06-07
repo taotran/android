@@ -12,25 +12,24 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
 import vn.com.tvtran.myfootball.R;
-import vn.com.tvtran.myfootball.entity.Club;
 
 /**
  * Created by tvtran on 2/2/2017.
+ * @author tvtran
  */
 
 public class ClubAdapter extends ArrayAdapter {
 
-    private List<Club> clubs;
+//    private List<Club> clubs;
     private LayoutInflater inflater;
 
-    public ClubAdapter(Context context, List<Club> clubs) {
+    public ClubAdapter(Context context, List<Object> clubs) {
         super(context, 0, clubs);
-        this.clubs = clubs;
+//        this.clubs = clubs;
         this.inflater = LayoutInflater.from(context);
     }
 
@@ -49,16 +48,16 @@ public class ClubAdapter extends ArrayAdapter {
         } else {
             viewHolder = (ClubAdapter.ViewHolder) convertView.getTag();
         }
-        Club club = clubs.get(position);
-        viewHolder.textView.setText(club.getName());
-        final String imageUrlStr = club.getCrestUrl();
+//        Club club = clubs.get(position);
+//        viewHolder.textView.setText(club.getName());
+//        final String imageUrlStr = club.getCrestUrl();
 
         new AsyncTask<Void, Void, Bitmap>() {
 
             @Override
             protected Bitmap doInBackground(Void... params) {
                 try {
-                    URL imgURL = new URL(imageUrlStr);
+                    URL imgURL = new URL("");
                     Bitmap bmp = BitmapFactory.decodeStream(imgURL.openConnection().getInputStream());
                     System.out.println("Keep loading image....");
                     return bmp;

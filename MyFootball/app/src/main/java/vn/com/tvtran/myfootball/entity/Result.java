@@ -1,9 +1,5 @@
 package vn.com.tvtran.myfootball.entity;
 
-/**
- * Created by tvtran on 2/2/2017.
- */
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,25 +12,38 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "href"
+        "goalsHomeTeam",
+        "goalsAwayTeam"
 })
-public class Players implements Serializable
+public class Result implements Serializable
 {
 
-    @JsonProperty("href")
-    private String href;
+    @JsonProperty("goalsHomeTeam")
+    private Integer goalsHomeTeam;
+    @JsonProperty("goalsAwayTeam")
+    private Integer goalsAwayTeam;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = -3811919401354521578L;
+    private final static long serialVersionUID = -558070286838417836L;
 
-    @JsonProperty("href")
-    public String getHref() {
-        return href;
+    @JsonProperty("goalsHomeTeam")
+    public Integer getGoalsHomeTeam() {
+        return goalsHomeTeam;
     }
 
-    @JsonProperty("href")
-    public void setHref(String href) {
-        this.href = href;
+    @JsonProperty("goalsHomeTeam")
+    public void setGoalsHomeTeam(Integer goalsHomeTeam) {
+        this.goalsHomeTeam = goalsHomeTeam;
+    }
+
+    @JsonProperty("goalsAwayTeam")
+    public Integer getGoalsAwayTeam() {
+        return goalsAwayTeam;
+    }
+
+    @JsonProperty("goalsAwayTeam")
+    public void setGoalsAwayTeam(Integer goalsAwayTeam) {
+        this.goalsAwayTeam = goalsAwayTeam;
     }
 
     @JsonAnyGetter

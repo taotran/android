@@ -6,7 +6,7 @@ import android.app.Fragment;
  * Created by tvtran on 2/2/2017.
  */
 
-public class Fixtures extends Fragment {
+public class FixturesFragment extends Fragment {
 
 
 }
