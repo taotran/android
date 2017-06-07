@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SalaryCalculateTool</string>
+    <string name="salary">Lương</string>
+    <string name="no_of_dependence">Phụ thuộc</string>
+    <string name="gross_net">GROSS > NET</string>
+    <string name="net_gross">NET > GROSS</string>
+</resources>
