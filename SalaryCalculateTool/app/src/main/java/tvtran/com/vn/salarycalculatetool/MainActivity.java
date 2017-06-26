@@ -2,15 +2,18 @@ package tvtran.com.vn.salarycalculatetool;
 
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ExpandableListView;
+import android.widget.Spinner;
+import tvtran.com.vn.adapter.ExpandableDetailAdapter;
 import tvtran.com.vn.entity.Detail;
 import tvtran.com.vn.entity.DetailGroupHeader;
+import tvtran.com.vn.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -54,6 +57,10 @@ public class MainActivity extends AppCompatActivity
   private Map<DetailGroupHeader, List<Detail>> detailsMap;
   private List<DetailGroupHeader> headers;
   //@formatter:on
+  private List<Detail> detailList = new ArrayList<>();
+  private List<Detail> detailTNCNList = new ArrayList<>();
+  private List<Detail> employerDetailList = new ArrayList<>();
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState)
@@ -79,6 +86,55 @@ public class MainActivity extends AppCompatActivity
 
   public void onGrossToNetClick(View view)
   {
+    System.out.println("You just click calculate");
+    Utils.hideSoftKeyboard(this);
+
+    final String salaryString = ((EditText) findViewById(R.id.salaryEditText)).getText().toString();
+    final String noOfDependence = ((Spinner) findViewById(R.id.dependenceSpinner)).getSelectedItem().toString();
+
+    final List<DetailGroupHeader> headers = new ArrayList<>();
+    DetailGroupHeader detailGroupHeader = new DetailGroupHeader(1, "Diễn giải chi tiết (VND)");
+    DetailGroupHeader detailGroupHeader1 = new DetailGroupHeader(2, "(*) Chi tiết thuế thu nhập cá nhân (VND)");
+    DetailGroupHeader detailGroupHeader2 = new DetailGroupHeader(3, "Người sử dụng lao động trả (VND)");
+
+    headers.add(detailGroupHeader);
+    headers.add(detailGroupHeader1);
+    headers.add(detailGroupHeader2);
+
+    //FULL Calculation
+    final Double finalG2NResult = calculateFinalG2NSalary(salaryString, noOfDependence);
+
+    final Map<DetailGroupHeader, List<Detail>> details = new HashMap<>();
+
+//    final List<Detail> detailList = new ArrayList<>();
+//    //@formatter:off
+//    detailList.add(new Detail("Lương GROSS"                                     , "24,600,000", "", 0));
+//    detailList.add(new Detail("Bảo hiểm xã hội (8%)"                            , "24,600,000", "", 1));
+//    detailList.add(new Detail("Bảo hiểm y tế (1.5%)"                            , "24,600,000", "", 2));
+//    detailList.add(new Detail("Bảo hiểm thất nghiệp (1% - lương tối thiểu vùng)", "24,600,000", "", 3));
+//    detailList.add(new Detail("Thu nhập trước thuế"                             , "24,600,000", "", 4));
+//    detailList.add(new Detail("Giảm trừ gia cảnh bản thân"                      , "24,600,000", "", 5));
+//    detailList.add(new Detail("Giảm trừ gia cảnh người phụ thuộc"               , "24,600,000", "", 6));
+//    detailList.add(new Detail("Thu nhập chịu thuế"                              , "24,600,000", "", 7));
+//    detailList.add(new Detail("Thuế thu nhập cá nhân (*)"                       , "24,600,000", "", 8));
+//    detailList.add(new Detail("Lương NET"                                       , "24,600,000", "", 9));
+
+    details.put(detailGroupHeader, detailList);
+
+    //@formatter:on
+
+    final ExpandableDetailAdapter detailAdapter = new ExpandableDetailAdapter(this, headers, details);
+
+    final ExpandableListView expandableListView = (ExpandableListView) findViewById(R.id.detailExpandableListView);
+
+    expandableListView.setAdapter(detailAdapter);
+
+
+    new AlertDialog.Builder(this)
+        .setTitle("Kết quả")
+        .setMessage("Lương Net: " + String.format("%.0f", finalG2NResult))
+        .setCancelable(true)
+        .show();
 
   }
 
@@ -105,7 +161,7 @@ public class MainActivity extends AppCompatActivity
   }
 
 
-  private double calculateFinalSalary(String salaryString, String numberOfDependenceString)
+  private double calculateFinalG2NSalary(String salaryString, String numberOfDependenceString)
   {
     double result = 0f;
     double salaryAfterInsurances = 0f;
@@ -114,7 +170,9 @@ public class MainActivity extends AppCompatActivity
     final Double salary = new Double(salaryString.toString());
     final Integer noDependencies = Integer.valueOf(numberOfDependenceString);
 
+    detailList.add(new Detail("Lương GROSS"                                     , formattedDouble(salary), "", 0));
     salaryAfterInsurances = calcSalaryAfterAppliedInsurances(salary);
+    detailList.add(new Detail("Thu nhập trước thuế", formattedDouble(salaryAfterInsurances), "", 4));
     if (noDependencies > 0) {
       salaryAfterDependencies = salaryAfterInsurances - GIAM_TRU_GIA_CANH_BAN_THAN - (noDependencies * GIA_CANH_PHU_THUOC);
     }
@@ -122,7 +180,15 @@ public class MainActivity extends AppCompatActivity
       salaryAfterDependencies = salaryAfterInsurances - GIAM_TRU_GIA_CANH_BAN_THAN;
     }
 
-    result = salaryAfterInsurances - calcThueTNCNByRange(salaryAfterDependencies);
+    detailList.add(new Detail("Giảm trừ gia cảnh bản thân", "9000000", "", 5));
+    detailList.add(new Detail("Giảm trừ gia cảnh người phụ thuộc", formattedDouble(salaryAfterDependencies), "", 6));
+    detailList.add(new Detail("Thu nhập chịu thuế", formattedDouble(salaryAfterInsurances - (9000000 + salaryAfterDependencies)), "", 7));
+
+    final Double thueTNCNByRange = calcThueTNCNByRange(salaryAfterDependencies);
+    result = salaryAfterInsurances - thueTNCNByRange;
+    detailList.add(new Detail("Thuế thu nhập cá nhân (*)", formattedDouble(thueTNCNByRange), "", 8));
+    detailList.add(new Detail("Lương NET", formattedDouble(result), "", 9));
+
     return result;
   }
 
@@ -132,9 +198,20 @@ public class MainActivity extends AppCompatActivity
     final double appliedBHYT = grossSalary * BHYT;
     final double appliedBHTN = grossSalary * BHTN;
 
+
     final double salaryBeforeTax = grossSalary - (appliedBHXH + appliedBHYT + appliedBHTN);
 
+    //add to detail list
+    detailList.add(new Detail("Bảo hiểm xã hội (8%)", formattedDouble(appliedBHXH), "", 1));
+    detailList.add(new Detail("Bảo hiểm y tế (1.5%)", formattedDouble(appliedBHYT), "", 2));
+    detailList.add(new Detail("Bảo hiểm thất nghiệp (1% - lương tối thiểu vùng)", formattedDouble(appliedBHTN), "", 3));
+
     return salaryBeforeTax;
+  }
+
+  private String formattedDouble(Double value)
+  {
+    return String.format(new Locale("vi", "VN"), "%.0f", value);
   }
 
   /*

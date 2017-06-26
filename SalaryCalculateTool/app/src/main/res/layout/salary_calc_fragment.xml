@@ -8,24 +8,11 @@
             android:text="@string/salary"
             android:layout_width="122dp"
             android:layout_height="wrap_content" android:id="@+id/textView" android:layout_alignBottom="@+id/salaryEditText"/>
-    <TextView
-            android:text="@string/no_of_dependence"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="37dp"
-            android:id="@+id/textView2" android:layout_below="@+id/textView" android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/salaryEditText"/>
     <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:layout_alignBottom="@+id/textView2"
             android:id="@+id/dependenceSpinner"
-            android:layout_alignStart="@+id/salaryEditText" android:layout_alignEnd="@+id/grossToNetBtn"/>
-    <ExpandableListView
-            android:id="@+id/detailExpandableListView"
-            android:layout_width="match_parent"
-            android:layout_height="350sp"
-            android:layout_alignParentStart="true" android:layout_marginStart="56dp"
-            android:layout_below="@+id/textView2"/>
+            android:layout_alignStart="@+id/salaryEditText"/>
     <EditText
             android:layout_width="233dp"
             android:layout_height="wrap_content"
@@ -50,5 +37,17 @@
             android:layout_marginStart="28dp"
             android:onClick="onGrossToNetClick"
     />
+    <ExpandableListView
+            android:id="@+id/detailExpandableListView"
+            android:layout_width="match_parent"
+            android:layout_height="350sp"
+            android:layout_below="@+id/textView2" android:layout_alignParentStart="true"/>
+    <TextView
+            android:text="@string/no_of_dependence"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:id="@+id/textView2"
+            android:layout_below="@+id/textView" android:layout_alignParentStart="true"/>
 
 </RelativeLayout>
