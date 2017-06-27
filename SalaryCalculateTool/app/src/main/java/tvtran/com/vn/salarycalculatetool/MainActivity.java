@@ -11,6 +11,8 @@ import android.widget.Spinner;
 import tvtran.com.vn.adapter.ExpandableDetailAdapter;
 import tvtran.com.vn.entity.Detail;
 import tvtran.com.vn.entity.DetailGroupHeader;
+import tvtran.com.vn.service.GrossToNetCalculator;
+import tvtran.com.vn.service.ICalculator;
 import tvtran.com.vn.utils.Utils;
 
 import java.util.*;
@@ -102,9 +104,9 @@ public class MainActivity extends AppCompatActivity
     headers.add(detailGroupHeader2);
 
     //FULL Calculation
-    final Double finalG2NResult = calculateFinalG2NSalary(salaryString, noOfDependence);
+//    final Double finalG2NResult = calculateFinalG2NSalary(salaryString, noOfDependence);
 
-    final Map<DetailGroupHeader, List<Detail>> details = new HashMap<>();
+    final Map<Integer, List<Detail>> details = Utils.initDetailsMap();
 
 //    final List<Detail> detailList = new ArrayList<>();
 //    //@formatter:off
@@ -119,9 +121,12 @@ public class MainActivity extends AppCompatActivity
 //    detailList.add(new Detail("Thuế thu nhập cá nhân (*)"                       , "24,600,000", "", 8));
 //    detailList.add(new Detail("Lương NET"                                       , "24,600,000", "", 9));
 
-    details.put(detailGroupHeader, detailList);
+//    details.put(1, detailList);
 
     //@formatter:on
+
+    ICalculator calculator = new GrossToNetCalculator(Double.parseDouble(salaryString), Integer.parseInt(noOfDependence), details);
+    final Double finalG2NResult = calculator.calculate();
 
     final ExpandableDetailAdapter detailAdapter = new ExpandableDetailAdapter(this, headers, details);
 

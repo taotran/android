@@ -7,7 +7,7 @@ package tvtran.com.vn.service;
  */
 public interface ICalculator
 {
-  void calculate();
+  double calculate();
 
   Double calcInsurancesSubtraction(Double salary);
 
@@ -16,4 +16,6 @@ public interface ICalculator
   Double calcThueTNCNByRange(Double salaryAfterDependenciesSubtraction);
 
   Double calcFinalSalary(Double salaryAfterInsurances, Double appliedThueTNCNSalary);
+
+  double calcEmployerTotalPaid(Double salary);
 }

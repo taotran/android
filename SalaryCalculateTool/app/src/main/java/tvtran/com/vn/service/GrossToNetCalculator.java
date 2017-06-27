@@ -1,9 +1,14 @@
 package tvtran.com.vn.service;
 
+import tvtran.com.vn.constant.InsuranceMaxRange;
 import tvtran.com.vn.entity.Detail;
-import tvtran.com.vn.entity.DetailGroupHeader;
 
-import java.util.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import static tvtran.com.vn.utils.Utils.*;
 
 /**
  * Property of CODIX Bulgaria EAD
@@ -18,6 +23,10 @@ public class GrossToNetCalculator implements ICalculator
   private static final double BHYT                        = 0.015;
   private static final double BHTN                        = 0.01;
 
+  private static final double EMPLOYER_BHXH               = 0.18;
+  private static final double EMPLOYER_BHYT               = 0.03;
+  private static final double EMPLOYER_BHTN               = 0.01;
+
   private static final double EIGHTY_MILIONS_RANGE        = 80000000f;
   private static final double FIFTY_TWO_MILIONS_RANGE     = 52000000f;
   private static final double THIRTY_TWO_MILIONS_RANGE    = 32000000f;
@@ -26,6 +35,15 @@ public class GrossToNetCalculator implements ICalculator
   private static final double FIVE_MILIONS_RANGE          = 5000000f;
   private static final double GIAM_TRU_GIA_CANH_BAN_THAN  = 9000000f;
   private static final double GIA_CANH_PHU_THUOC          = 3600000f;
+
+
+  private static final double MAX_TNCN_UNDER_5_MIL        = 250000;
+  private static final double MAX_TNCN_5_10_MIL           = 500000;
+  private static final double MAX_TNCN_10_18_MIL          = 1200000;
+  private static final double MAX_TNCN_18_32_MIL          = 2800000;
+  private static final double MAX_TNCN_32_52_MIL          = 5000000;
+  private static final double MAX_TNCN_52_80_MIL          = 8400000;
+
   //@formatter:on
 
   private Integer numberOfDependencies;
@@ -33,45 +51,65 @@ public class GrossToNetCalculator implements ICalculator
   private Double inputSalary;
 
 
-  private Map<DetailGroupHeader, List<Detail>> detailsMap;
   private List<Detail> detailList = new ArrayList<>();
   private List<Detail> detailTNCNList = new ArrayList<>();
   private List<Detail> employerDetailList = new ArrayList<>();
 
-  public GrossToNetCalculator(Double inputSalary, Integer numberOfDependencies)
+  public GrossToNetCalculator(Double inputSalary, Integer numberOfDependencies, Map<Integer, List<Detail>> detailsMap)
   {
     this.numberOfDependencies = numberOfDependencies;
     this.inputSalary = inputSalary;
-    this.detailsMap = new HashMap<>();
+    this.detailList = detailsMap.get(1);
+    this.detailTNCNList = detailsMap.get(2);
+    this.employerDetailList = detailsMap.get(3);
   }
 
-  public void calculate()
+  public double calculate()
   {
+    writeContentToDetailList(detailList, 0, formattedDouble(inputSalary));
     double salaryAfterInsurancesSubtraction = calcInsurancesSubtraction(inputSalary);
+
+    //Thu nhap truoc thue
+    writeContentToDetailList(detailList, 4, formattedDouble(salaryAfterInsurancesSubtraction));
+
     double salaryAfterDependenciesSubtraction = calcDependenciesSubtraction(numberOfDependencies, salaryAfterInsurancesSubtraction);
     double thueTNCNByRange = calcThueTNCNByRange(salaryAfterDependenciesSubtraction);
     double finalSalary = calcFinalSalary(salaryAfterInsurancesSubtraction, thueTNCNByRange);
     System.out.println(finalSalary);
+    writeContentToDetailList(detailList, 9, formattedDouble(finalSalary));
 
+    //call to output EmployerDetails only
+    calcEmployerTotalPaid(inputSalary);
+
+    return finalSalary;
   }
 
   public Double calcInsurancesSubtraction(Double salary)
   {
-    final double appliedBHXH = salary * BHXH;
-    final double appliedBHYT = salary * BHYT;
-    final double appliedBHTN = salary * BHTN;
+    final double appliedBHXH = salary <= InsuranceMaxRange.MAX_BHXH_BHYT_RANGE  ? salary * BHXH : InsuranceMaxRange.DEFAULT_OVER_RANGE_BHXH;
+    final double appliedBHYT = salary <= InsuranceMaxRange.MAX_BHXH_BHYT_RANGE  ? salary * BHYT : InsuranceMaxRange.DEFAULT_OVER_RANGE_BHYT;
+    final double appliedBHTN = salary <= InsuranceMaxRange.MAX_BHTN_AREA1_RANGE ? salary * BHTN : InsuranceMaxRange.DEFAULT_OVER_RANGE_BHTN;
 
-    detailList.add(new Detail("Bảo hiểm xã hội (8%)", formattedDouble(appliedBHXH), "", 1));
-    detailList.add(new Detail("Bảo hiểm y tế (1.5%)", formattedDouble(appliedBHYT), "", 2));
-    detailList.add(new Detail("Bảo hiểm thất nghiệp (1% - lương tối thiểu vùng)", formattedDouble(appliedBHTN), "", 3));
-
+    writeContentToDetailList(detailList, 1, formattedDouble(appliedBHXH));
+    writeContentToDetailList(detailList, 2, formattedDouble(appliedBHYT));
+    writeContentToDetailList(detailList, 3, formattedDouble(appliedBHTN));
     return salary - (appliedBHXH + appliedBHYT + appliedBHTN);
   }
 
   @Override
   public Double calcDependenciesSubtraction(int numberOfDependencies, Double salaryAfterInsurancesSubtraction)
   {
-    return salaryAfterInsurancesSubtraction - GIAM_TRU_GIA_CANH_BAN_THAN - (numberOfDependencies * GIA_CANH_PHU_THUOC);
+    final double dependenciesDeductedAmount = (numberOfDependencies * GIA_CANH_PHU_THUOC);
+    final double result = salaryAfterInsurancesSubtraction - GIAM_TRU_GIA_CANH_BAN_THAN - dependenciesDeductedAmount;
+
+    //giam tru gia canh ban than
+    writeContentToDetailList(detailList, 5, formattedDouble(GIAM_TRU_GIA_CANH_BAN_THAN));
+    //giam tru gia canh nguoi phu thuoc
+    writeContentToDetailList(detailList, 6, formattedDouble(dependenciesDeductedAmount));
+    //thu nhap chiu thue
+    writeContentToDetailList(detailList, 7, formattedDouble(result));
+
+    return result;
   }
 
   /*
@@ -87,41 +125,78 @@ public class GrossToNetCalculator implements ICalculator
   @Override
   public Double calcThueTNCNByRange(Double salaryAfterDependenciesSubtraction)
   {
-    double taxTotal = 0f;
+    double taxTotal;
+    double aboveEightyMilRangeTax = 0;
+    double fiftyTwoToEightyMilRangeTax = 0;
+    double thirtyTwoToFiftyTwoMilRangeTax = 0;
+    double eighteenToThirtyTwoMilRangeTax = 0;
+    double tenToEighteenMilRangeTax = 0;
+    double fiveToTenMilRangeTax = 0;
+    double underFiveRangeTax = 0;
+
+    if (salaryAfterDependenciesSubtraction > EIGHTY_MILIONS_RANGE) {
+      aboveEightyMilRangeTax          = (salaryAfterDependenciesSubtraction - EIGHTY_MILIONS_RANGE) * 0.35;
+      fiftyTwoToEightyMilRangeTax     = MAX_TNCN_52_80_MIL;
+      thirtyTwoToFiftyTwoMilRangeTax  = MAX_TNCN_32_52_MIL;
+      eighteenToThirtyTwoMilRangeTax  = MAX_TNCN_18_32_MIL;
+      tenToEighteenMilRangeTax        = MAX_TNCN_10_18_MIL;
+      fiveToTenMilRangeTax            = MAX_TNCN_5_10_MIL;
+      underFiveRangeTax               = MAX_TNCN_UNDER_5_MIL;
+    }
+
     if ((salaryAfterDependenciesSubtraction >= EIGHTY_MILIONS_RANGE) || (salaryAfterDependenciesSubtraction > FIFTY_TWO_MILIONS_RANGE && salaryAfterDependenciesSubtraction < EIGHTY_MILIONS_RANGE)) {
-      taxTotal += (salaryAfterDependenciesSubtraction - FIFTY_TWO_MILIONS_RANGE) * 0.30;
-      taxTotal += THIRTY_TWO_MILIONS_RANGE * 0.25;
-      taxTotal += EIGHTEEN_MILIONS_RANGE * 0.20;
-      taxTotal += TEN_MILIONS_RANGE * 0.15;
-      taxTotal += FIVE_MILIONS_RANGE * 0.10;
-      taxTotal += FIVE_MILIONS_RANGE * 0.05;
+      fiftyTwoToEightyMilRangeTax   = (salaryAfterDependenciesSubtraction - FIFTY_TWO_MILIONS_RANGE) * 0.30;
+      thirtyTwoToFiftyTwoMilRangeTax  = MAX_TNCN_32_52_MIL;
+      eighteenToThirtyTwoMilRangeTax  = MAX_TNCN_18_32_MIL;
+      tenToEighteenMilRangeTax        = MAX_TNCN_10_18_MIL;
+      fiveToTenMilRangeTax            = MAX_TNCN_5_10_MIL;
+      underFiveRangeTax               = MAX_TNCN_UNDER_5_MIL;
     }
 
     if (salaryAfterDependenciesSubtraction > THIRTY_TWO_MILIONS_RANGE && salaryAfterDependenciesSubtraction <= FIFTY_TWO_MILIONS_RANGE) {
-      taxTotal += (salaryAfterDependenciesSubtraction - THIRTY_TWO_MILIONS_RANGE) * 0.25;
-      taxTotal += EIGHTEEN_MILIONS_RANGE * 0.20;
-      taxTotal += TEN_MILIONS_RANGE * 0.15;
-      taxTotal += FIVE_MILIONS_RANGE * 0.10;
-      taxTotal += FIVE_MILIONS_RANGE * 0.05;
+      thirtyTwoToFiftyTwoMilRangeTax  = (salaryAfterDependenciesSubtraction - THIRTY_TWO_MILIONS_RANGE) * 0.25;
+      eighteenToThirtyTwoMilRangeTax  = MAX_TNCN_18_32_MIL;
+      tenToEighteenMilRangeTax        = MAX_TNCN_10_18_MIL;
+      fiveToTenMilRangeTax            = MAX_TNCN_5_10_MIL;
+      underFiveRangeTax               = MAX_TNCN_UNDER_5_MIL;
     }
 
     if (salaryAfterDependenciesSubtraction > EIGHTEEN_MILIONS_RANGE && salaryAfterDependenciesSubtraction <= THIRTY_TWO_MILIONS_RANGE) {
-      taxTotal += (salaryAfterDependenciesSubtraction - EIGHTEEN_MILIONS_RANGE) * 0.20;
-      taxTotal += TEN_MILIONS_RANGE * 0.15;
-      taxTotal += FIVE_MILIONS_RANGE * 0.10;
-      taxTotal += FIVE_MILIONS_RANGE * 0.05;
+      eighteenToThirtyTwoMilRangeTax   = (salaryAfterDependenciesSubtraction - EIGHTEEN_MILIONS_RANGE) * 0.20;
+      tenToEighteenMilRangeTax        = MAX_TNCN_10_18_MIL;
+      fiveToTenMilRangeTax            = MAX_TNCN_5_10_MIL;
+      underFiveRangeTax               = MAX_TNCN_UNDER_5_MIL;
     }
 
     if (salaryAfterDependenciesSubtraction > TEN_MILIONS_RANGE && salaryAfterDependenciesSubtraction <= EIGHTEEN_MILIONS_RANGE) {
-      taxTotal += (salaryAfterDependenciesSubtraction - TEN_MILIONS_RANGE) * 0.15;
-      taxTotal += FIVE_MILIONS_RANGE * 0.10;
-      taxTotal += FIVE_MILIONS_RANGE * 0.05;
+      tenToEighteenMilRangeTax        = (salaryAfterDependenciesSubtraction - TEN_MILIONS_RANGE) * 0.15;
+      fiveToTenMilRangeTax            = MAX_TNCN_5_10_MIL;
+      underFiveRangeTax               = MAX_TNCN_UNDER_5_MIL;
     }
 
     if (salaryAfterDependenciesSubtraction > FIVE_MILIONS_RANGE && salaryAfterDependenciesSubtraction <= TEN_MILIONS_RANGE) {
-      taxTotal += (salaryAfterDependenciesSubtraction - FIVE_MILIONS_RANGE) * 0.10;
-      taxTotal += FIVE_MILIONS_RANGE * 0.05;
+      fiveToTenMilRangeTax            = (salaryAfterDependenciesSubtraction - FIVE_MILIONS_RANGE) * 0.10;
+      underFiveRangeTax               = MAX_TNCN_UNDER_5_MIL;
     }
+
+    writeContentToDetailList(detailTNCNList, 0, formattedDouble(underFiveRangeTax));
+    writeContentToDetailList(detailTNCNList, 1, formattedDouble(fiveToTenMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 2, formattedDouble(tenToEighteenMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 3, formattedDouble(eighteenToThirtyTwoMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 4, formattedDouble(thirtyTwoToFiftyTwoMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 5, formattedDouble(fiftyTwoToEightyMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 6, formattedDouble(aboveEightyMilRangeTax));
+
+
+    taxTotal = aboveEightyMilRangeTax
+              + fiftyTwoToEightyMilRangeTax
+              + thirtyTwoToFiftyTwoMilRangeTax
+              + eighteenToThirtyTwoMilRangeTax
+              + tenToEighteenMilRangeTax
+              + fiveToTenMilRangeTax
+              + underFiveRangeTax;
+    //thue tncn
+    writeContentToDetailList(detailList, 8, formattedDouble(taxTotal));
 
     return taxTotal;
   }
@@ -132,13 +207,34 @@ public class GrossToNetCalculator implements ICalculator
     return salaryAfterInsurances - appliedThueTNCNSalary;
   }
 
-  public Map<DetailGroupHeader, List<Detail>> getDetailsMap()
+  @Override
+  public double calcEmployerTotalPaid(Double grossSalary)
   {
-    return detailsMap;
+    final double appliedBHXH = grossSalary <= InsuranceMaxRange.MAX_BHXH_BHYT_RANGE  ? grossSalary * EMPLOYER_BHXH : InsuranceMaxRange.DEFAULT_EMPLOYER_OVER_RANGE_BHXH;
+    final double appliedBHYT = grossSalary <= InsuranceMaxRange.MAX_BHXH_BHYT_RANGE  ? grossSalary * EMPLOYER_BHYT : InsuranceMaxRange.DEFAULT_EMPLOYER_OVER_RANGE_BHYT;
+    final double appliedBHTN = grossSalary <= InsuranceMaxRange.MAX_BHTN_AREA1_RANGE ? grossSalary * EMPLOYER_BHTN : InsuranceMaxRange.DEFAULT_EMPLOYER_OVER_RANGE_BHTN;
+    final double total = grossSalary + (appliedBHXH + appliedBHYT + appliedBHTN);
+
+    writeContentToDetailList(employerDetailList, 0, formattedDouble(grossSalary));
+    writeContentToDetailList(employerDetailList, 1, formattedDouble(appliedBHXH));
+    writeContentToDetailList(employerDetailList, 2, formattedDouble(appliedBHYT));
+    writeContentToDetailList(employerDetailList, 3, formattedDouble(appliedBHTN));
+    writeContentToDetailList(employerDetailList, 4, formattedDouble(total));
+
+    return total;
   }
 
-  private String formattedDouble(Double value)
-  {
-    return String.format(new Locale("vi", "VN"), "%.0f", value);
+  private String formattedDouble(double number) {
+    if (number < 1000) {
+      return String.valueOf(number);
+    }
+    try {
+      NumberFormat formatter = new DecimalFormat("###,###");
+      String resp = formatter.format(number);
+//      resp = resp.replaceAll(",", ".");
+      return resp;
+    } catch (Exception e) {
+      return "";
+    }
   }
 }

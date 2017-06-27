@@ -21,9 +21,9 @@ public abstract class AbstractExpandableListAdapter<S extends ExpandableGroupEnt
   private Context _context;
   private List<S> _listDataHeader; // header titles
 
-  private Map<S, List<T>> _listDataChild;// child data in format of header title, child title
+  private Map<Integer, List<T>> _listDataChild;// child data in format of header title, child title
 
-  public AbstractExpandableListAdapter(Context context, List<S> listDataHeader, Map<S, List<T>> _listDataChild)
+  public AbstractExpandableListAdapter(Context context, List<S> listDataHeader, Map<Integer, List<T>> _listDataChild)
   {
     this._context = context;
     this._listDataHeader = listDataHeader;
@@ -39,7 +39,7 @@ public abstract class AbstractExpandableListAdapter<S extends ExpandableGroupEnt
   @Override
   public int getChildrenCount(int groupPosition)
   {
-    return _listDataChild.get(_listDataHeader.get(groupPosition)).size();
+    return _listDataChild.get(_listDataHeader.get(groupPosition).getId()).size();
   }
 
   @Override
@@ -51,7 +51,7 @@ public abstract class AbstractExpandableListAdapter<S extends ExpandableGroupEnt
   @Override
   public T getChild(int groupPosition, int childPosition)
   {
-    return _listDataChild.get(_listDataHeader.get(groupPosition)).get(childPosition);
+    return _listDataChild.get(_listDataHeader.get(groupPosition).getId()).get(childPosition);
   }
 
   @Override
@@ -64,7 +64,7 @@ public abstract class AbstractExpandableListAdapter<S extends ExpandableGroupEnt
   public long getChildId(int groupPosition, int childPosition)
   {
 
-    return _listDataChild.get(_listDataHeader.get(groupPosition)).get(childPosition).getId();
+    return _listDataChild.get(_listDataHeader.get(groupPosition).getId()).get(childPosition).getId();
   }
 
   @Override

@@ -44,7 +44,7 @@ public class NetToGrossCalculator implements ICalculator
   }
 
   @Override
-  public void calculate()
+  public double calculate()
   {
     double salaryAfterDependenciesSubtraction = calcDependenciesSubtraction(numberOfDependencies, inputNetSalary);
     System.out.println("salaryAfterDependenciesSubtraction = " + salaryAfterDependenciesSubtraction);
@@ -58,7 +58,7 @@ public class NetToGrossCalculator implements ICalculator
 
     System.out.println(finalGrossSalary);
 
-
+    return finalGrossSalary;
   }
 
   @Override
@@ -111,6 +111,12 @@ public class NetToGrossCalculator implements ICalculator
   public Double calcFinalSalary(Double salaryAfterInsurances /* NULL here */, Double salaryBeforeTax /* SAL before Tax*/)
   {
     return salaryBeforeTax < MAX_SAL_FOR_BHXH_BHYT ? (salaryBeforeTax) / 0.895 : (salaryBeforeTax + MAX_BHXH_BHXH + MAX_BHXH_BHYT) / (1 - 0.01);
+  }
+
+  @Override
+  public double calcEmployerTotalPaid(Double salary)
+  {
+    return 0;
   }
 
   final Double calcSalaryBeforeTax(Double appliedThueTNCNSalary, int numberOfDependencies) {

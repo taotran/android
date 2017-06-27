@@ -18,6 +18,12 @@ public class Detail implements IdentifiableEntity
   {
   }
 
+  public Detail(String key, int index)
+  {
+    this.key = key;
+    this.index = index;
+  }
+
   public Detail(String key, String value, String type, int index)
   {
     this.key = key;
