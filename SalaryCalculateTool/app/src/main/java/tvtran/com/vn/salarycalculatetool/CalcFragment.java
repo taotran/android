@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.text.NumberFormat;
 
@@ -46,7 +47,9 @@ public class CalcFragment extends Fragment
 
     final EditText salaryEditText = (EditText) getActivity().findViewById(R.id.salaryEditText);
 
-//    salaryEditText.addTextChangedListener(new CurrencyTextWatcher());
+    getActivity().findViewById(R.id.resultTextView).setVisibility(View.GONE);
+
+    salaryEditText.addTextChangedListener(new CurrencyTextWatcher());
 
     super.onResume();
 
@@ -65,20 +68,22 @@ public class CalcFragment extends Fragment
 
     public synchronized void afterTextChanged(Editable s)
     {
-      if (!mEditing) {
-        mEditing = true;
+//      if (!mEditing) {
+//        mEditing = true;
+//
+//        String digits = s.toString().replaceAll("\\D", "");
+//        NumberFormat nf = NumberFormat.getCurrencyInstance();
+//        try {
+//          String formatted = nf.format(Double.parseDouble(digits) / 100);
+//          s.replace(0, s.length(), formatted);
+//        } catch (NumberFormatException nfe) {
+//          s.clear();
+//        }
+//
+//        mEditing = false;
+//      }
 
-        String digits = s.toString().replaceAll("\\D", "");
-        NumberFormat nf = NumberFormat.getCurrencyInstance();
-        try {
-          String formatted = nf.format(Double.parseDouble(digits) / 100);
-          s.replace(0, s.length(), formatted);
-        } catch (NumberFormatException nfe) {
-          s.clear();
-        }
 
-        mEditing = false;
-      }
     }
 
     public void beforeTextChanged(CharSequence s, int start, int count, int after)
@@ -87,6 +92,8 @@ public class CalcFragment extends Fragment
 
     public void onTextChanged(CharSequence s, int start, int before, int count)
     {
+      String ss = "10000";
+      System.out.println(s);
     }
 
   }

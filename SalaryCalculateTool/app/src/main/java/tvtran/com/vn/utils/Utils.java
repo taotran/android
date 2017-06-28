@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.view.inputmethod.InputMethodManager;
 import tvtran.com.vn.entity.Detail;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -110,5 +112,19 @@ public class Utils
 
     return detailsMap;
 
+  }
+
+  public static String formattedDouble(double number) {
+    if (number < 1000) {
+      return String.valueOf(number);
+    }
+    try {
+      NumberFormat formatter = new DecimalFormat("###,###");
+      String resp = formatter.format(number);
+//      resp = resp.replaceAll(",", ".");
+      return resp;
+    } catch (Exception e) {
+      return "";
+    }
   }
 }

@@ -1,11 +1,20 @@
 package tvtran.com.vn.service;
 
+import tvtran.com.vn.entity.Detail;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static tvtran.com.vn.utils.Utils.formattedDouble;
+import static tvtran.com.vn.utils.Utils.writeContentToDetailList;
+
 /**
  * Property of CODIX Bulgaria EAD
  * Created by tvtran
  * Date:  6/26/2017
  */
-public class NetToGrossCalculator implements ICalculator
+public class NetToGrossCalculator extends AbstractCalculator
 {
   //@formatter:off
   private static final double MIN_SAL                     = 1210000;
@@ -37,74 +46,107 @@ public class NetToGrossCalculator implements ICalculator
   private Double inputNetSalary;
   private int numberOfDependencies;
 
-  public NetToGrossCalculator(Double inputNetSalary, int numberOfDependencies)
+  private List<Detail> detailList = new ArrayList<>();
+  private List<Detail> detailTNCNList = new ArrayList<>();
+  private List<Detail> employerDetailList = new ArrayList<>();
+
+  public NetToGrossCalculator(Double inputNetSalary, int numberOfDependencies, Map<Integer, List<Detail>> detailsMap)
   {
     this.inputNetSalary = inputNetSalary;
     this.numberOfDependencies = numberOfDependencies;
+    this.detailList = detailsMap.get(1);
+    this.detailTNCNList = detailsMap.get(2);
+    this.employerDetailList = detailsMap.get(3);
   }
 
   @Override
   public double calculate()
   {
     double salaryAfterDependenciesSubtraction = calcDependenciesSubtraction(numberOfDependencies, inputNetSalary);
-    System.out.println("salaryAfterDependenciesSubtraction = " + salaryAfterDependenciesSubtraction);
 
     double appliedThueTNCNSalary = calcThueTNCNByRange(salaryAfterDependenciesSubtraction);
-    System.out.println("appliedThueTNCNSalary = " + appliedThueTNCNSalary);
 
-    double salaryBeforeTax = calcSalaryBeforeTax(appliedThueTNCNSalary, 0);
+    writeContentToDetailList(detailList, 7, formattedDouble(appliedThueTNCNSalary));
+
+    writeContentToDetailList(detailList, 8, formattedDouble(appliedThueTNCNSalary - salaryAfterDependenciesSubtraction));
+
+    double salaryBeforeTax = calcSalaryBeforeTax(appliedThueTNCNSalary, numberOfDependencies);
 
     double finalGrossSalary = calcFinalSalary(null, salaryBeforeTax);
 
     System.out.println(finalGrossSalary);
 
-    return finalGrossSalary;
-  }
 
-  @Override
-  public Double calcInsurancesSubtraction(Double salary)
-  {
-    return null;
+    // Luong GROSS
+    writeContentToDetailList(detailList, 0, formattedDouble(finalGrossSalary));
+    // Luong NET
+    writeContentToDetailList(detailList, 9, formattedDouble(inputNetSalary));
+
+    // just to output to screen
+    calcInsurancesSubtraction(finalGrossSalary);
+
+    return finalGrossSalary;
   }
 
   @Override
   public Double calcDependenciesSubtraction(int numberOfDependencies, Double netSalary)
   {
     System.out.println("numberOfDependencies = [" + numberOfDependencies + "], netSalary = [" + netSalary + "]");
-    return netSalary - GIAM_TRU_GIA_CANH_BAN_THAN - (numberOfDependencies * GIA_CANH_PHU_THUOC);
+    final double dependenciesDeduction = numberOfDependencies * GIA_CANH_PHU_THUOC;
+    final double result = netSalary - GIAM_TRU_GIA_CANH_BAN_THAN - dependenciesDeduction;
+    // giam tru ban than (5)
+    writeContentToDetailList(detailList, 5, formattedDouble(GIAM_TRU_GIA_CANH_BAN_THAN));
+
+    // giam tru phu thuoc (6)
+    writeContentToDetailList(detailList, 6, formattedDouble(dependenciesDeduction));
+
+    // Thu nhap chiu thue (7)
+    writeContentToDetailList(detailList, 7, formattedDouble(result));
+    return result;
   }
 
   @Override
   public Double calcThueTNCNByRange(Double salaryAfterDependenciesSubtraction)
   {
+    double taxedSalary = salaryAfterDependenciesSubtraction;
+
     if (salaryAfterDependenciesSubtraction > N2G_UNDER_TAX_RANGE_6) {
-      return (salaryAfterDependenciesSubtraction - 9850000) / N2G_UNDER_TAX_CONST_7;
+      taxedSalary = (salaryAfterDependenciesSubtraction - 9850000) / N2G_UNDER_TAX_CONST_7;
     }
 
     if (salaryAfterDependenciesSubtraction > N2G_UNDER_TAX_RANGE_5 && salaryAfterDependenciesSubtraction <= N2G_UNDER_TAX_RANGE_6) {
-      return (salaryAfterDependenciesSubtraction - 5850000) / N2G_UNDER_TAX_CONST_6;
+      taxedSalary = (salaryAfterDependenciesSubtraction - 5850000) / N2G_UNDER_TAX_CONST_6;
     }
 
     if (salaryAfterDependenciesSubtraction > N2G_UNDER_TAX_RANGE_4 && salaryAfterDependenciesSubtraction <= N2G_UNDER_TAX_RANGE_5) {
-      return (salaryAfterDependenciesSubtraction - 3250000) / N2G_UNDER_TAX_CONST_5;
+      taxedSalary = (salaryAfterDependenciesSubtraction - 3250000) / N2G_UNDER_TAX_CONST_5;
     }
 
     if (salaryAfterDependenciesSubtraction > N2G_UNDER_TAX_RANGE_3 && salaryAfterDependenciesSubtraction <= N2G_UNDER_TAX_RANGE_4) {
-      return (salaryAfterDependenciesSubtraction - 1650000) / N2G_UNDER_TAX_CONST_4;
+      taxedSalary = (salaryAfterDependenciesSubtraction - 1650000) / N2G_UNDER_TAX_CONST_4;
     }
 
     if (salaryAfterDependenciesSubtraction > N2G_UNDER_TAX_RANGE_2 && salaryAfterDependenciesSubtraction <= N2G_UNDER_TAX_RANGE_3) {
-      return (salaryAfterDependenciesSubtraction - 750000) / N2G_UNDER_TAX_CONST_3;
+      taxedSalary = (salaryAfterDependenciesSubtraction - 750000) / N2G_UNDER_TAX_CONST_3;
     }
 
     if (salaryAfterDependenciesSubtraction > N2G_UNDER_TAX_RANGE_1 && salaryAfterDependenciesSubtraction <= N2G_UNDER_TAX_RANGE_2) {
-      return (salaryAfterDependenciesSubtraction - 250000) / N2G_UNDER_TAX_CONST_2;
+      taxedSalary = (salaryAfterDependenciesSubtraction - 250000) / N2G_UNDER_TAX_CONST_2;
     }
 
     if (salaryAfterDependenciesSubtraction < N2G_UNDER_TAX_RANGE_1) {
-      return salaryAfterDependenciesSubtraction / N2G_UNDER_TAX_CONST_1;
+      taxedSalary = salaryAfterDependenciesSubtraction / N2G_UNDER_TAX_CONST_1;
     }
-    return salaryAfterDependenciesSubtraction;
+
+
+
+    return taxedSalary;
+  }
+
+  @Override
+  protected List<Detail> getDetailsList()
+  {
+    return detailList;
   }
 
   @Override
@@ -119,8 +161,14 @@ public class NetToGrossCalculator implements ICalculator
     return 0;
   }
 
-  final Double calcSalaryBeforeTax(Double appliedThueTNCNSalary, int numberOfDependencies) {
-    return appliedThueTNCNSalary + GIAM_TRU_GIA_CANH_BAN_THAN + (GIA_CANH_PHU_THUOC*numberOfDependencies);
+  final Double calcSalaryBeforeTax(Double appliedThueTNCNSalary, int numberOfDependencies)
+  {
+    final double result = appliedThueTNCNSalary + GIAM_TRU_GIA_CANH_BAN_THAN + (GIA_CANH_PHU_THUOC * numberOfDependencies);
+
+    // TN truoc thue
+    writeContentToDetailList(detailList, 4, formattedDouble(result));
+
+    return result;
   }
 
 
