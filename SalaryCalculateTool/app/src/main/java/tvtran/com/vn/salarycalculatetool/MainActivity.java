@@ -3,6 +3,7 @@ package tvtran.com.vn.salarycalculatetool;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -28,7 +29,6 @@ public class MainActivity extends AppCompatActivity
   {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-
     final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
     fragmentTransaction.replace(R.id.fragment_container, new CalcFragment());

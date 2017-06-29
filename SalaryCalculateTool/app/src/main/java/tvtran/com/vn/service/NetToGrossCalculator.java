@@ -2,7 +2,6 @@ package tvtran.com.vn.service;
 
 import tvtran.com.vn.entity.Detail;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,28 +42,20 @@ public class NetToGrossCalculator extends AbstractCalculator
 
   //@formatter:on
 
-  private Double inputNetSalary;
-  private int numberOfDependencies;
-
-  private List<Detail> detailList = new ArrayList<>();
-  private List<Detail> detailTNCNList = new ArrayList<>();
-  private List<Detail> employerDetailList = new ArrayList<>();
-
   public NetToGrossCalculator(Double inputNetSalary, int numberOfDependencies, Map<Integer, List<Detail>> detailsMap)
   {
-    this.inputNetSalary = inputNetSalary;
-    this.numberOfDependencies = numberOfDependencies;
-    this.detailList = detailsMap.get(1);
-    this.detailTNCNList = detailsMap.get(2);
-    this.employerDetailList = detailsMap.get(3);
+    super(inputNetSalary, numberOfDependencies, detailsMap);
   }
 
   @Override
   public double calculate()
   {
-    double salaryAfterDependenciesSubtraction = calcDependenciesSubtraction(numberOfDependencies, inputNetSalary);
+    double salaryAfterDependenciesSubtraction = calcDependenciesSubtraction(numberOfDependencies, inputSalary);
 
     double appliedThueTNCNSalary = calcThueTNCNByRange(salaryAfterDependenciesSubtraction);
+
+    // call this to append Thue TNCN to details only
+    super.calcThueTNCNByRange(appliedThueTNCNSalary);
 
     writeContentToDetailList(detailList, 7, formattedDouble(appliedThueTNCNSalary));
 
@@ -80,10 +71,13 @@ public class NetToGrossCalculator extends AbstractCalculator
     // Luong GROSS
     writeContentToDetailList(detailList, 0, formattedDouble(finalGrossSalary));
     // Luong NET
-    writeContentToDetailList(detailList, 9, formattedDouble(inputNetSalary));
+    writeContentToDetailList(detailList, 9, formattedDouble(inputSalary));
 
     // just to output to screen
     calcInsurancesSubtraction(finalGrossSalary);
+
+    // just to output employer details to screen
+    calcEmployerTotalPaid(finalGrossSalary);
 
     return finalGrossSalary;
   }
@@ -139,26 +133,13 @@ public class NetToGrossCalculator extends AbstractCalculator
     }
 
 
-
     return taxedSalary;
-  }
-
-  @Override
-  protected List<Detail> getDetailsList()
-  {
-    return detailList;
   }
 
   @Override
   public Double calcFinalSalary(Double salaryAfterInsurances /* NULL here */, Double salaryBeforeTax /* SAL before Tax*/)
   {
     return salaryBeforeTax < MAX_SAL_FOR_BHXH_BHYT ? (salaryBeforeTax) / 0.895 : (salaryBeforeTax + MAX_BHXH_BHXH + MAX_BHXH_BHYT) / (1 - 0.01);
-  }
-
-  @Override
-  public double calcEmployerTotalPaid(Double salary)
-  {
-    return 0;
   }
 
   final Double calcSalaryBeforeTax(Double appliedThueTNCNSalary, int numberOfDependencies)
@@ -170,10 +151,4 @@ public class NetToGrossCalculator extends AbstractCalculator
 
     return result;
   }
-
-
-//  Double calcFinalSalary(Double appliedThueTNCNSalary, int numberOfDependencies) {
-//
-//    return thuNhapTruocThue < MAX_SAL_FOR_BHXH_BHYT ? (thuNhapTruocThue) / 0.895 : (thuNhapTruocThue + MAX_BHXH_BHXH + MAX_BHXH_BHYT) / (1 - 0.01);
-//  }
 }
