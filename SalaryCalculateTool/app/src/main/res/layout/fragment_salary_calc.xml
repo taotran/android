@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:mask="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+                >
+
+    <TextView
+            android:text="@string/salary"
+            android:layout_width="122dp"
+            android:layout_height="wrap_content" android:id="@+id/textView"
+            android:layout_alignBottom="@+id/salaryEditText" android:textColor="@color/colorBlack"/>
+    <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_alignBottom="@+id/textView2"
+            android:id="@+id/dependenceSpinner"
+            android:layout_alignStart="@+id/salaryEditText" android:layout_alignEnd="@+id/salaryEditText"/>
+    <EditText
+            android:layout_width="233dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/salaryEditText"
+            android:inputType="numberSigned"
+            android:layout_alignParentTop="true" android:layout_toEndOf="@+id/textView"/>
+
+    <!--<br.com.sapereaude.maskedEditText.MaskedEditText-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--mask:allowed_chars="0123456789"-->
+            <!--mask:mask="###,###"-->
+            <!---->
+            <!--android:id="@+id/salaryEditText"-->
+            <!--android:layout_marginStart="11dp" android:layout_alignParentTop="true"-->
+            <!--android:layout_toEndOf="@+id/textView"-->
+    <!--/>-->
+    <TextView
+            android:text="@string/no_of_dependence"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:id="@+id/textView2"
+            android:layout_below="@+id/textView" android:layout_alignParentStart="true"
+            android:textColor="@color/colorBlack"/>
+    <TextView
+            android:text="Kết quả:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/finalResultTextView"
+            android:layout_alignBottom="@+id/caculateBtn" android:layout_alignParentStart="true"
+            android:visibility="visible" android:textColor="@color/colorBlack" android:textSize="18sp"/>
+    <TextView
+            android:text="10,000,000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/resultTextView" android:textSize="18sp"
+            android:textColor="@android:color/holo_orange_dark"
+            android:layout_alignBaseline="@+id/finalResultTextView"
+            android:layout_alignBottom="@+id/finalResultTextView" android:layout_toEndOf="@+id/finalResultTextView"
+            android:layout_marginStart="13dp"/>
+    <Button
+            android:layout_height="30dp"
+            android:id="@+id/caculateBtn"
+            android:onClick="onCalculateClick"
+            android:elevation="0dp" android:textSize="10sp"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:background="@android:color/holo_red_light"
+            android:layout_marginBottom="21dp"
+            android:text="Tính"
+            android:layout_width="40dp" android:layout_alignParentBottom="true"
+            android:layout_alignEnd="@+id/dependenceSpinner" android:layout_marginEnd="28dp"/>
+    <ExpandableListView
+            android:id="@+id/detailExpandableListView"
+            android:layout_width="match_parent"
+            android:layout_height="310sp"
+            android:layout_below="@+id/checkBoxNet2Gross" android:layout_alignParentStart="true"/>
+    <CheckBox
+            android:text="NET > GROSS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkBoxNet2Gross"
+            android:layout_below="@+id/dependenceSpinner" android:layout_toEndOf="@+id/textView"
+            android:textAppearance="@android:style/TextAppearance.Material.Small" android:textStyle="italic"
+            android:textAllCaps="false"/>
+
+</RelativeLayout>

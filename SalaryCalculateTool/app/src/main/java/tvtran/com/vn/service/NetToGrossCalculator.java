@@ -16,9 +16,9 @@ import static tvtran.com.vn.utils.Utils.writeContentToDetailList;
 public class NetToGrossCalculator extends AbstractCalculator
 {
   //@formatter:off
-  private static final double MIN_SAL                     = 1210000;
+  private static final double MIN_SAL                     = 1300000; // Before: 1.210.000 => After Jun, 01, 2017: 1.300.000
 
-  private static final double MAX_SAL_FOR_BHXH_BHYT       = MIN_SAL * 20; // = 24.200.000 VND
+  private static final double MAX_SAL_FOR_BHXH_BHYT       = MIN_SAL * 20; // Before = 24.200.000 VND(OLD) => 26.000.000
 
   private static final double MAX_BHXH_BHXH               = 1936000; //for salary > MAX_SAL_FOR_BHXH_BHYT
   private static final double MAX_BHXH_BHYT               = 363000; //for salary > MAX_SAL_FOR_BHXH_BHYT

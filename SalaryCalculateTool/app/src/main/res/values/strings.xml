@@ -2,12 +2,15 @@
     <string name="app_name">SalaryCalculateTool</string>
     <string name="salary">Lương</string>
     <string name="no_of_dependence">Phụ thuộc</string>
-    <string name="gross_net">GROSS > NET</string>
-    <string name="net_gross">NET > GROSS</string>
+    <string name="calculate">Calculate</string>
     <string name="title_activity_main2">Main2Activity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="menu_calculate">Tính lương</string>
+    <string name="menu_qanda">Hỏi/đáp</string>
+    <string name="menu_seeking">Tra cứu</string>
 </resources>
