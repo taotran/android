@@ -1,8 +1,11 @@
 package tvtran.com.vn.salarycalculatetool;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.View;
@@ -53,11 +56,35 @@ public class MyMainActivity extends AppCompatActivity
 
   public void onCalculateClick(View view)
   {
+    final String salaryString = ((EditText) findViewById(R.id.salaryEditText)).getText().toString();
+    final String noOfDependence = ((Spinner) findViewById(R.id.dependenceSpinner)).getSelectedItem().toString();
+
+
+    if (salaryString.trim().isEmpty()) {
+
+      AlertDialog.Builder dialog;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        dialog = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+      } else {
+        dialog = new AlertDialog.Builder(this);
+      }
+      dialog
+              .setTitle("Input Error!")
+              .setMessage("Please input correct Salary")
+              .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+              });
+      dialog.show();
+      return;
+    }
+
     final CheckBox net2GrossCheckBox = (CheckBox)findViewById(R.id.checkBoxNet2Gross);
     Utils.hideSoftKeyboard(this);
 
-    final String salaryString = ((EditText) findViewById(R.id.salaryEditText)).getText().toString();
-    final String noOfDependence = ((Spinner) findViewById(R.id.dependenceSpinner)).getSelectedItem().toString();
+
 
     final List<DetailGroupHeader> headers = new ArrayList<>();
     DetailGroupHeader detailGroupHeader = new DetailGroupHeader(1, "Diễn giải chi tiết (VND)");

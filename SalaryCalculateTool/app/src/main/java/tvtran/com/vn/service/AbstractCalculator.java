@@ -140,6 +140,10 @@ public abstract class AbstractCalculator implements ICalculator
       underFiveRangeTax = MAX_TNCN_UNDER_5_MIL;
     }
 
+    if (salaryAfterDependenciesSubtraction < FIVE_MILIONS_RANGE) {
+      underFiveRangeTax = salaryAfterDependenciesSubtraction * 0.05;
+    }
+
     writeContentToDetailList(detailTNCNList, 0, formattedDouble(underFiveRangeTax));
     writeContentToDetailList(detailTNCNList, 1, formattedDouble(fiveToTenMilRangeTax));
     writeContentToDetailList(detailTNCNList, 2, formattedDouble(tenToEighteenMilRangeTax));
