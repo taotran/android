@@ -5,16 +5,19 @@
             android:id="@+id/action_one"
             android:enabled="true"
             android:title="@string/menu_calculate"
+            android:icon="@drawable/ic_menu_gallery"
             app:showAsAction="ifRoom" />
 
     <item
             android:id="@+id/action_two"
             android:enabled="true"
             android:title="@string/menu_seeking"
+            android:icon="@drawable/ic_menu_camera"
             app:showAsAction="ifRoom" />
     <item
             android:id="@+id/action_three"
             android:enabled="true"
             android:title="@string/menu_qanda"
+            android:icon="@drawable/ic_menu_manage"
             app:showAsAction="ifRoom" />
 </menu>

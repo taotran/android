@@ -25,7 +25,7 @@ public abstract class AbstractCalculator implements ICalculator
   private static final double BHYT                        = 0.015;
   private static final double BHTN                        = 0.01;
 
-  private static final double EMPLOYER_BHXH               = 0.18;
+  private static final double EMPLOYER_BHXH               = 0.175;
   private static final double EMPLOYER_BHYT               = 0.03;
   private static final double EMPLOYER_BHTN               = 0.01;
 
@@ -105,7 +105,7 @@ public abstract class AbstractCalculator implements ICalculator
       underFiveRangeTax = MAX_TNCN_UNDER_5_MIL;
     }
 
-    if ((salaryAfterDependenciesSubtraction >= EIGHTY_MILIONS_RANGE) || (salaryAfterDependenciesSubtraction > FIFTY_TWO_MILIONS_RANGE && salaryAfterDependenciesSubtraction < EIGHTY_MILIONS_RANGE)) {
+    if ((salaryAfterDependenciesSubtraction > FIFTY_TWO_MILIONS_RANGE) && (salaryAfterDependenciesSubtraction <= EIGHTY_MILIONS_RANGE && salaryAfterDependenciesSubtraction < EIGHTY_MILIONS_RANGE)) {
       fiftyTwoToEightyMilRangeTax = (salaryAfterDependenciesSubtraction - FIFTY_TWO_MILIONS_RANGE) * 0.30;
       thirtyTwoToFiftyTwoMilRangeTax = MAX_TNCN_32_52_MIL;
       eighteenToThirtyTwoMilRangeTax = MAX_TNCN_18_32_MIL;
@@ -140,17 +140,17 @@ public abstract class AbstractCalculator implements ICalculator
       underFiveRangeTax = MAX_TNCN_UNDER_5_MIL;
     }
 
-    if (salaryAfterDependenciesSubtraction < FIVE_MILIONS_RANGE) {
+    if (salaryAfterDependenciesSubtraction < FIVE_MILIONS_RANGE && salaryAfterDependenciesSubtraction > 0) {
       underFiveRangeTax = salaryAfterDependenciesSubtraction * 0.05;
     }
 
-    writeContentToDetailList(detailTNCNList, 0, formattedDouble(underFiveRangeTax));
-    writeContentToDetailList(detailTNCNList, 1, formattedDouble(fiveToTenMilRangeTax));
-    writeContentToDetailList(detailTNCNList, 2, formattedDouble(tenToEighteenMilRangeTax));
-    writeContentToDetailList(detailTNCNList, 3, formattedDouble(eighteenToThirtyTwoMilRangeTax));
-    writeContentToDetailList(detailTNCNList, 4, formattedDouble(thirtyTwoToFiftyTwoMilRangeTax));
-    writeContentToDetailList(detailTNCNList, 5, formattedDouble(fiftyTwoToEightyMilRangeTax));
-    writeContentToDetailList(detailTNCNList, 6, formattedDouble(aboveEightyMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 0, "5%", formattedDouble(underFiveRangeTax));
+    writeContentToDetailList(detailTNCNList, 1, "10%",formattedDouble(fiveToTenMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 2, "15%",formattedDouble(tenToEighteenMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 3, "20%",formattedDouble(eighteenToThirtyTwoMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 4, "25%",formattedDouble(thirtyTwoToFiftyTwoMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 5, "30%",formattedDouble(fiftyTwoToEightyMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 6, "35%",formattedDouble(aboveEightyMilRangeTax));
 
 
     taxTotal = aboveEightyMilRangeTax

@@ -15,6 +15,11 @@
                 android:layout_width="0dp"
                 android:textColor="@android:color/black" />
 
+        <TextView
+                android:id="@+id/detailValue2"
+                android:layout_width="0dp"
+                android:textColor="@android:color/black" />
+
     </TableRow>
 
 

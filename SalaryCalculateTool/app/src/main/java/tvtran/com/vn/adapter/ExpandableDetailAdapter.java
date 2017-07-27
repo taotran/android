@@ -50,12 +50,21 @@ public class ExpandableDetailAdapter extends AbstractExpandableListAdapter<Detai
       viewHolder = new ListItemViewHolder();
       viewHolder.detailKeyTextView = (TextView) convertView.findViewById(R.id.detailKey);
       viewHolder.detailValueTextView = (TextView) convertView.findViewById(R.id.detailValue);
+      viewHolder.detailValue2TextView = (TextView) convertView.findViewById(R.id.detailValue2);
       convertView.setTag(viewHolder);
     }
     viewHolder = (ListItemViewHolder) convertView.getTag();
 
     viewHolder.detailKeyTextView.setText(detail.getKey());
     viewHolder.detailValueTextView.setText(detail.getValue());
+//    if (detail.getValue2() != null && !detail.getValue2().trim().isEmpty()) {
+//      viewHolder.detailValue2TextView.setText(detail.getValue2());
+//      viewHolder.detailValue2TextView.setVisibility(View.VISIBLE);
+//    }
+//    else {
+//      viewHolder.detailValue2TextView.setVisibility(View.GONE);
+//    }
+    viewHolder.detailValue2TextView.setText(detail.getValue2());
 
 
     return convertView;
@@ -71,5 +80,6 @@ public class ExpandableDetailAdapter extends AbstractExpandableListAdapter<Detai
   {
     TextView detailKeyTextView;
     TextView detailValueTextView;
+    TextView detailValue2TextView;
   }
 }

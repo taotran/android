@@ -64,22 +64,24 @@
             android:elevation="0dp" android:textSize="10sp"
             style="@style/Widget.AppCompat.Button.Colored"
             android:background="@android:color/holo_red_light"
-            android:layout_marginBottom="21dp"
+            android:layout_marginBottom="19dp"
             android:text="Tính"
-            android:layout_width="40dp" android:layout_alignParentBottom="true"
-            android:layout_alignEnd="@+id/dependenceSpinner" android:layout_marginEnd="28dp"/>
+            android:layout_width="40dp"
+            android:layout_alignParentBottom="true" android:layout_alignParentEnd="true"/>
     <ExpandableListView
             android:id="@+id/detailExpandableListView"
             android:layout_width="match_parent"
-            android:layout_height="310sp"
-            android:layout_below="@+id/checkBoxNet2Gross" android:layout_alignParentStart="true"/>
+            android:layout_height="match_parent"
+            android:layout_below="@+id/checkBoxNet2Gross" android:layout_alignParentStart="true"
+            android:layout_above="@+id/finalResultTextView"
+    />
+
     <CheckBox
             android:text="NET > GROSS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/checkBoxNet2Gross"
             android:layout_below="@+id/dependenceSpinner" android:layout_toEndOf="@+id/textView"
-            android:textAppearance="@android:style/TextAppearance.Material.Small" android:textStyle="italic"
-            android:textAllCaps="false"/>
+            android:layout_alignStart="@+id/dependenceSpinner"/>
 
 </RelativeLayout>
