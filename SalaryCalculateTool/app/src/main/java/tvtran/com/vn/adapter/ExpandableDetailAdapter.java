@@ -19,12 +19,10 @@ import java.util.Map;
  */
 public class ExpandableDetailAdapter extends AbstractExpandableListAdapter<DetailGroupHeader, Detail>
 {
-  private LayoutInflater inflater;
 
   public ExpandableDetailAdapter(Context context, List<DetailGroupHeader> listDataHeader, Map<Integer, List<Detail>> _listDataChild)
   {
     super(context, listDataHeader, _listDataChild);
-    this.inflater = LayoutInflater.from(context);
   }
 
   @Override

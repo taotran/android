@@ -6,10 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import tvtran.com.vn.adapter.CitySpinnerAdapter;
-import tvtran.com.vn.entity.City;
+import tvtran.com.vn.adapter.ExpandableDistrictAdapter;
 import tvtran.com.vn.utils.Utils;
 
 /**
@@ -35,6 +35,13 @@ public class RefFragment extends Fragment
     //final String[] cities = new String[] {"Ho Chi Minh", "Ha Noi", "Da Nang"};
 
     citySpinner.setAdapter(new CitySpinnerAdapter(getContext(), Utils.createCities()));
+
+    ExpandableDistrictAdapter adapter = new ExpandableDistrictAdapter(getContext(), Utils.createDistrictGroupHeaders(), Utils.createDistrictDetails());
+
+    ExpandableListView listView = (ExpandableListView) getActivity().findViewById(R.id.expandableDistrictInCity);
+
+    listView.setAdapter(adapter);
+
 
     super.onResume();
   }

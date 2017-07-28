@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_gravity="start" android:stretchColumns="*">
+
+
+        <TextView
+                android:id="@+id/address"
+                android:layout_width="0dp" />
+
+        <TextView
+                android:id="@+id/contactInfo"
+                android:layout_width="0dp"
+                android:textColor="@android:color/black" />
+
+        <TextView
+                android:id="@+id/others"
+                android:layout_width="0dp"
+                android:textColor="@android:color/black" />
+
+
+
+</TableLayout>

@@ -63,7 +63,7 @@
             android:onClick="onCalculateClick"
             android:elevation="0dp" android:textSize="10sp"
             style="@style/Widget.AppCompat.Button.Colored"
-            android:background="@android:color/holo_red_light"
+            android:background="@color/colorCustom"
             android:layout_marginBottom="19dp"
             android:text="Tính"
             android:layout_width="40dp"

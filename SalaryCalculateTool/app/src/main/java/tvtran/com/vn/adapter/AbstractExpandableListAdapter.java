@@ -1,6 +1,7 @@
 package tvtran.com.vn.adapter;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.widget.BaseExpandableListAdapter;
 import tvtran.com.vn.entity.ExpandableGroupEntity;
 import tvtran.com.vn.entity.IdentifiableEntity;
@@ -18,16 +19,19 @@ public abstract class AbstractExpandableListAdapter<S extends ExpandableGroupEnt
     extends BaseExpandableListAdapter
 {
 
-  private Context _context;
+  protected Context _context;
   private List<S> _listDataHeader; // header titles
 
   private Map<Integer, List<T>> _listDataChild;// child data in format of header title, child title
+
+  protected LayoutInflater inflater;
 
   public AbstractExpandableListAdapter(Context context, List<S> listDataHeader, Map<Integer, List<T>> _listDataChild)
   {
     this._context = context;
     this._listDataHeader = listDataHeader;
     this._listDataChild = _listDataChild;
+    this.inflater = LayoutInflater.from(context);
   }
 
   @Override

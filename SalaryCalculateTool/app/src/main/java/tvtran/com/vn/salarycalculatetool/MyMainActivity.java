@@ -74,7 +74,7 @@ public class MyMainActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-              ((EditText) findViewById(R.id.salaryEditText)).requestFocus();
+            findViewById(R.id.salaryEditText).requestFocus();
             }
           });
       dialog.show();
