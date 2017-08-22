@@ -1,15 +1,18 @@
 package tvtran.com.vn.salarycalculatetool;
 
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.*;
 import tvtran.com.vn.ViewSwapperAdapter;
 import tvtran.com.vn.adapter.ExpandableDetailAdapter;
+import tvtran.com.vn.entity.ConfigObject;
 import tvtran.com.vn.entity.Detail;
 import tvtran.com.vn.entity.DetailGroupHeader;
 import tvtran.com.vn.service.GrossToNetCalculator;
@@ -53,13 +56,13 @@ public class MyMainActivity extends AppCompatActivity
 
   public void onCalculateClick(View view)
   {
-    final String salaryString = ((EditText) findViewById(R.id.salaryEditText)).getText().toString();
+    final String salaryString = ((EditText) findViewById(R.id.salaryEditText)).getText().toString().replaceAll(",", "");
     final String noOfDependence = ((Spinner) findViewById(R.id.dependenceSpinner)).getSelectedItem().toString();
 
 
     if (salaryString.trim().isEmpty()) {
 
-      AlertDialog.Builder dialog;
+      final AlertDialog.Builder dialog;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         dialog = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
       }
@@ -74,7 +77,7 @@ public class MyMainActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-            findViewById(R.id.salaryEditText).requestFocus();
+              findViewById(R.id.salaryEditText).requestFocus();
             }
           });
       dialog.show();
@@ -119,5 +122,19 @@ public class MyMainActivity extends AppCompatActivity
 
     final TextView finalResultTextView = (TextView) findViewById(R.id.finalResultTextView);
     finalResultTextView.setVisibility(View.VISIBLE);
+
+    expandableListView.expandGroup(0, true);
+    expandableListView.expandGroup(1, true);
+    expandableListView.expandGroup(2, true);
+  }
+
+  public void onConfigurationClick(View view) {
+    FragmentManager fragmentManager = getSupportFragmentManager();
+
+    ConfigFragment configFragment = new ConfigFragment();
+//    Bundle args = new Bundle();
+//    args.putParcelable("configObject", new ConfigObject());
+//    configFragment.setArguments();
+    configFragment.show(fragmentManager, "Configuration");
   }
 }

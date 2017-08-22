@@ -1,6 +1,7 @@
 package tvtran.com.vn.utils;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.view.inputmethod.InputMethodManager;
 import tvtran.com.vn.entity.City;
 import tvtran.com.vn.entity.Detail;
@@ -128,18 +129,18 @@ public class Utils
 
   public static List<City> createCities()
   {
-    final City hcm = new City(1, "HCM");
-    final City hn = new City(2, "HN");
-    final City dn = new City(3, "DN");
+    final City hcm = new City(1, "Tp. Hồ Chí Minh");
+    final City hn = new City(2, "Hà Nội");
+    final City dn = new City(3, "Đà Nẵng");
 
     return Arrays.asList(hcm, hn, dn);
   }
 
-  public static List<DistrictGroupHeader> createDistrictGroupHeaders()
+  public static List<DistrictGroupHeader> createDistrictGroupHeaders(int cityId)
   {
 
     //@formatter:off
-    return Arrays.asList(
+    return cityId == 1 ? Arrays.asList(
           new DistrictGroupHeader(1,  1, "Quận 1")
         , new DistrictGroupHeader(2 , 1, "Quận 2")
         , new DistrictGroupHeader(3 , 1, "Quận 3")
@@ -153,19 +154,65 @@ public class Utils
         , new DistrictGroupHeader(11, 1, "Quận 11")
         , new DistrictGroupHeader(12, 1, "Quận 12")
         , new DistrictGroupHeader(13, 1, "Quận Bình Tân")
+    ) : Arrays.asList(
+          new DistrictGroupHeader(21,  2, "Quận 1")
+        , new DistrictGroupHeader(22, 2, "Quận 2")
+        , new DistrictGroupHeader(23, 2, "Quận 3")
+        , new DistrictGroupHeader(24, 2, "Quận 4")
+        , new DistrictGroupHeader(25, 2, "Quận 5")
+        , new DistrictGroupHeader(26, 2, "Quận 6")
+        , new DistrictGroupHeader(27, 2, "Quận 7")
+        , new DistrictGroupHeader(28, 2, "Quận 8")
+        , new DistrictGroupHeader(29, 2, "Quận 9")
+        , new DistrictGroupHeader(30, 2, "Quận 10")
+        , new DistrictGroupHeader(31, 2, "Quận 11")
+        , new DistrictGroupHeader(32, 2, "Quận 12")
+        , new DistrictGroupHeader(33, 2, "Quận Bình Tân")
     );
 
     //@formatter:on
   }
 
-  public static Map<Integer, List<DistrictDetail>> createDistrictDetails()
+  public static Map<Integer, List<DistrictDetail>> createDistrictDetails(int cityId)
   {
     final Map<Integer, List<DistrictDetail>> districtDetailMap = new HashMap<>();
 
-    districtDetailMap.put(1, Arrays.asList(new DistrictDetail(1, "Số 35 Lý Văn Phức, Phường Tân Định, Quận 1.", "0902548822", "")));
-    districtDetailMap.put(2, Arrays.asList(new DistrictDetail(2, "400 Đồng Văn Cống - Phường Thạnh Mỹ Lợi - Quận 2", "0902548821", "")));
-    districtDetailMap.put(3, Arrays.asList(new DistrictDetail(3, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+    if(cityId == 1) {
+      districtDetailMap.put(1, Arrays.asList(new DistrictDetail(1, "Số 35 Lý Văn Phức, Phường Tân Định, Quận 1.", "0902548822", "")));
+      districtDetailMap.put(2, Arrays.asList(new DistrictDetail(2, "400 Đồng Văn Cống - Phường Thạnh Mỹ Lợi - Quận 2", "0902548821", "")));
+      districtDetailMap.put(3, Arrays.asList(new DistrictDetail(3, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+      districtDetailMap.put(4, Arrays.asList(new DistrictDetail(4, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+      districtDetailMap.put(5, Arrays.asList(new DistrictDetail(5, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+      districtDetailMap.put(6, Arrays.asList(new DistrictDetail(6, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+      districtDetailMap.put(7, Arrays.asList(new DistrictDetail(7, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+      districtDetailMap.put(8, Arrays.asList(new DistrictDetail(8, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+      districtDetailMap.put(9, Arrays.asList(new DistrictDetail(9, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+      districtDetailMap.put(10, Arrays.asList(new DistrictDetail(10, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+      districtDetailMap.put(11, Arrays.asList(new DistrictDetail(11, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+      districtDetailMap.put(12, Arrays.asList(new DistrictDetail(12, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+      districtDetailMap.put(13, Arrays.asList(new DistrictDetail(13, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+    } else {
+      districtDetailMap.put(21, Arrays.asList(new DistrictDetail(21, "Số 351 Lý Văn Phức, Phường Tân Định, Quận 1.", "0902548822", "")));
+      districtDetailMap.put(22, Arrays.asList(new DistrictDetail(22, "400 Đồng Văn Cống - Phường Thạnh Mỹ Lợi - Quận 2", "0902548821", "")));
+      districtDetailMap.put(23, Arrays.asList(new DistrictDetail(23, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+      districtDetailMap.put(24, Arrays.asList(new DistrictDetail(24, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+      districtDetailMap.put(25, Arrays.asList(new DistrictDetail(25, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+      districtDetailMap.put(26, Arrays.asList(new DistrictDetail(26, "386/79 đường Lê Văn Sỹ phường 14 quận 3 Tp.HCM.", "38465079", "")));
+    }
+
 
     return districtDetailMap;
+  }
+
+  @NonNull
+  public static String insertChar(String s, int pos, String charToInsert)
+  {
+    return s.substring(0, pos) + charToInsert + s.substring(pos, s.length());
+  }
+
+  @NonNull
+  public static String insertComma(String s, int pos)
+  {
+    return insertChar(s, pos, ",");
   }
 }

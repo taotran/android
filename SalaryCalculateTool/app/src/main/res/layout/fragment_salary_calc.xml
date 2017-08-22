@@ -7,21 +7,23 @@
                 >
 
     <TextView
-            android:text="@string/salary"
+            android:text="VND"
             android:layout_width="122dp"
             android:layout_height="wrap_content" android:id="@+id/textView"
-            android:layout_alignBottom="@+id/salaryEditText" android:textColor="@color/colorBlack"/>
+            android:layout_alignBottom="@+id/salaryEditText" android:textColor="@color/colorBlack"
+            android:layout_alignEnd="@+id/textView2"/>
     <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:layout_alignBottom="@+id/textView2"
+            android:layout_marginStart="5dp"
             android:id="@+id/dependenceSpinner"
+            android:minWidth="85dp"
             android:layout_alignStart="@+id/salaryEditText" android:layout_alignEnd="@+id/salaryEditText"/>
     <EditText
-            android:layout_width="233dp"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:id="@+id/salaryEditText"
-            android:inputType="numberSigned"
-            android:layout_alignParentTop="true" android:layout_toEndOf="@+id/textView"/>
+            android:layout_alignParentTop="true" android:layout_toEndOf="@+id/textView" android:text="0"/>
 
     <!--<br.com.sapereaude.maskedEditText.MaskedEditText-->
             <!--android:layout_width="fill_parent"-->
@@ -42,21 +44,22 @@
             android:layout_below="@+id/textView" android:layout_alignParentStart="true"
             android:textColor="@color/colorBlack"/>
     <TextView
-            android:text="Kết quả:"
+            android:text="Kết quả"
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/finalResultTextView"
             android:layout_alignBottom="@+id/caculateBtn" android:layout_alignParentStart="true"
-            android:visibility="visible" android:textColor="@color/colorBlack" android:textSize="18sp"/>
+            android:visibility="visible" android:textColor="@color/colorBlack" android:textSize="16sp"/>
     <TextView
-            android:text="10,000,000"
+            android:text="Salary Amount"
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/resultTextView" android:textSize="18sp"
+            android:id="@+id/resultTextView" android:textSize="16sp"
             android:textColor="@android:color/holo_orange_dark"
-            android:layout_alignBaseline="@+id/finalResultTextView"
-            android:layout_alignBottom="@+id/finalResultTextView" android:layout_toEndOf="@+id/finalResultTextView"
-            android:layout_marginStart="13dp"/>
+            android:layout_below="@+id/detailExpandableListView" android:layout_toEndOf="@+id/textView2"
+            android:layout_marginStart="47dp"/>
     <Button
             android:layout_height="30dp"
             android:id="@+id/caculateBtn"
@@ -67,8 +70,9 @@
             android:layout_marginBottom="19dp"
             android:text="Tính"
             android:layout_width="40dp"
-            android:layout_alignParentBottom="true" android:layout_alignParentEnd="true"/>
+            android:layout_alignParentBottom="true" android:layout_alignStart="@+id/editTextUSD"/>
     <ExpandableListView
+            android:layout_marginTop="10dp"
             android:id="@+id/detailExpandableListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -81,7 +85,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/checkBoxNet2Gross"
+            android:layout_marginStart="-5dp"
             android:layout_below="@+id/dependenceSpinner" android:layout_toEndOf="@+id/textView"
             android:layout_alignStart="@+id/dependenceSpinner"/>
+    <TextView
+            android:text="USD"
+            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_alignTop="@+id/textView"
+            android:layout_toEndOf="@+id/salaryEditText" android:id="@+id/textViewUSD"
+            android:textColor="@color/colorBlack"/>
+    <EditText
+            android:layout_marginStart="5dp"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:layout_toEndOf="@+id/textViewUSD"
+            android:id="@+id/editTextUSD" android:text="0"/>
+    <Button
+            android:text="THIẾT LẬP"
+            android:layout_marginStart="4dp"
+            android:layout_width="100dp"
+            android:layout_height="30dp" android:layout_alignBottom="@+id/caculateBtn"
+            android:layout_alignParentEnd="true" android:id="@+id/button"
+            android:layout_toEndOf="@+id/caculateBtn" style="@style/Widget.AppCompat.Button.Colored"
+            android:background="@color/colorCustom" android:textSize="10sp" android:onClick="onConfigurationClick"/>
 
 </RelativeLayout>

@@ -71,4 +71,10 @@ public class ExpandableDistrictAdapter extends AbstractExpandableListAdapter<Dis
     TextView contactTextView;
     TextView otherTextView;
   }
+
+  public void setNewItems(List<DistrictGroupHeader> listDataHeader, Map<Integer, List<DistrictDetail>> listDataChild) {
+    this._listDataHeader = listDataHeader;
+    this._listDataChild = listDataChild;
+    notifyDataSetChanged();
+  }
 }

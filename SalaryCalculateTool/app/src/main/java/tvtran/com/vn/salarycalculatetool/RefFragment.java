@@ -6,10 +6,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import tvtran.com.vn.adapter.CitySpinnerAdapter;
 import tvtran.com.vn.adapter.ExpandableDistrictAdapter;
+import tvtran.com.vn.entity.City;
 import tvtran.com.vn.utils.Utils;
 
 /**
@@ -32,15 +34,30 @@ public class RefFragment extends Fragment
   {
     final Spinner citySpinner = (Spinner) getActivity().findViewById(R.id.spinnerCity);
 
-    //final String[] cities = new String[] {"Ho Chi Minh", "Ha Noi", "Da Nang"};
-
     citySpinner.setAdapter(new CitySpinnerAdapter(getContext(), Utils.createCities()));
 
-    ExpandableDistrictAdapter adapter = new ExpandableDistrictAdapter(getContext(), Utils.createDistrictGroupHeaders(), Utils.createDistrictDetails());
+    final int selectedCityId = ((City) citySpinner.getSelectedItem()).getId();
 
-    ExpandableListView listView = (ExpandableListView) getActivity().findViewById(R.id.expandableDistrictInCity);
+    final ExpandableDistrictAdapter adapter = new ExpandableDistrictAdapter(getContext(), Utils.createDistrictGroupHeaders(selectedCityId), Utils.createDistrictDetails(selectedCityId));
+
+    final ExpandableListView listView = (ExpandableListView) getActivity().findViewById(R.id.expandableDistrictInCity);
 
     listView.setAdapter(adapter);
+
+    citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+    {
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+      {
+        adapter.setNewItems(Utils.createDistrictGroupHeaders(selectedCityId), Utils.createDistrictDetails(selectedCityId));
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> parent)
+      {
+
+      }
+    });
 
 
     super.onResume();

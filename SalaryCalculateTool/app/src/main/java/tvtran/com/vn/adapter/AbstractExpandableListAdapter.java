@@ -20,9 +20,9 @@ public abstract class AbstractExpandableListAdapter<S extends ExpandableGroupEnt
 {
 
   protected Context _context;
-  private List<S> _listDataHeader; // header titles
+  protected List<S> _listDataHeader; // header titles
 
-  private Map<Integer, List<T>> _listDataChild;// child data in format of header title, child title
+  protected Map<Integer, List<T>> _listDataChild;// child data in format of header title, child title
 
   protected LayoutInflater inflater;
 
