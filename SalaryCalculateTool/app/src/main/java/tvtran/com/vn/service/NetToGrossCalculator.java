@@ -1,6 +1,7 @@
 package tvtran.com.vn.service;
 
 import tvtran.com.vn.constant.InsuranceMaxRange;
+import tvtran.com.vn.entity.ConfigObject;
 import tvtran.com.vn.entity.Detail;
 
 import java.util.List;
@@ -41,15 +42,15 @@ public class NetToGrossCalculator extends AbstractCalculator
 
   //@formatter:on
 
-  public NetToGrossCalculator(Double inputNetSalary, int numberOfDependencies, Map<Integer, List<Detail>> detailsMap)
+  public NetToGrossCalculator(Double inputNetSalaryVND, Double inputNetSalaryUSD, int numberOfDependencies, Map<Integer, List<Detail>> detailsMap, ConfigObject configObject)
   {
-    super(inputNetSalary, numberOfDependencies, detailsMap);
+    super(inputNetSalaryVND, inputNetSalaryUSD, numberOfDependencies, detailsMap, configObject);
   }
 
   @Override
   public double calculate()
   {
-    double salaryAfterDependenciesSubtraction = calcDependenciesSubtraction(numberOfDependencies, inputSalary);
+    double salaryAfterDependenciesSubtraction = calcDependenciesSubtraction(numberOfDependencies, totalSalary);
 
     double appliedThueTNCNSalary = calcThueTNCNByRange(salaryAfterDependenciesSubtraction);
 
@@ -70,7 +71,7 @@ public class NetToGrossCalculator extends AbstractCalculator
     // Luong GROSS
     writeContentToDetailList(detailList, 0, formattedDouble(finalGrossSalary));
     // Luong NET
-    writeContentToDetailList(detailList, 9, formattedDouble(inputSalary));
+    writeContentToDetailList(detailList, 9, formattedDouble(totalSalary));
 
     // just to output to screen
     calcInsurancesSubtraction(finalGrossSalary);

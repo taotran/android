@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import tvtran.com.vn.utils.Utils;
 
 import static tvtran.com.vn.utils.Utils.insertComma;
 
@@ -75,42 +76,42 @@ public class CalcFragment extends Fragment
       mEditing = false;
     }
 
-    //TODO: optimize needed!!!
+    //TODO: optimization needed!!!
     public synchronized void afterTextChanged(Editable s)
     {
       if (!mEditing) {
         mEditing = true;
-        final String replacedComma = s.toString().replaceAll(COMMA, BLANK);
+//        final String replacedComma = s.toString().replaceAll(COMMA, BLANK);
 
         try {
           // for checking only
-          Integer.parseInt(replacedComma);
+//          Integer.parseInt(replacedComma);
 
-          int numberOfChar = replacedComma.length();
-          String tempStr = s.toString();
-          //1.000 -> 100.000
-          if (numberOfChar >= THOUSANDS && numberOfChar < MILLIONS) {
-            int commaPos = numberOfChar - 3;
-            tempStr = insertComma(replacedComma, commaPos);
-          }
-          //1.000.000 -> 100.000.000
-          else if (numberOfChar >= MILLIONS && numberOfChar < BILLIONS) {
-            int firstComma = numberOfChar - 6;
-            int secondComma = numberOfChar - 2;
-
-            tempStr = insertComma(replacedComma, firstComma);
-            tempStr = insertComma(tempStr, secondComma);
-          }
-          //1.000.000.000
-          else if (numberOfChar >= BILLIONS) {
-            int firstComma = numberOfChar - 9;
-            int secondComma = numberOfChar - 5;
-            int thirdComma = numberOfChar - 1;
-            tempStr = insertComma(replacedComma, firstComma);
-            tempStr = insertComma(tempStr, secondComma);
-            tempStr = insertComma(tempStr, thirdComma);
-          }
-          s.replace(0, s.length(), tempStr);
+//          int numberOfChar = replacedComma.length();
+//          String tempStr = s.toString();
+//          //1.000 -> 100.000
+//          if (numberOfChar >= THOUSANDS && numberOfChar < MILLIONS) {
+//            int commaPos = numberOfChar - 3;
+//            tempStr = insertComma(replacedComma, commaPos);
+//          }
+//          //1.000.000 -> 100.000.000
+//          else if (numberOfChar >= MILLIONS && numberOfChar < BILLIONS) {
+//            int firstComma = numberOfChar - 6;
+//            int secondComma = numberOfChar - 2;
+//
+//            tempStr = insertComma(replacedComma, firstComma);
+//            tempStr = insertComma(tempStr, secondComma);
+//          }
+//          //1.000.000.000
+//          else if (numberOfChar >= BILLIONS) {
+//            int firstComma = numberOfChar - 9;
+//            int secondComma = numberOfChar - 5;
+//            int thirdComma = numberOfChar - 1;
+//            tempStr = insertComma(replacedComma, firstComma);
+//            tempStr = insertComma(tempStr, secondComma);
+//            tempStr = insertComma(tempStr, thirdComma);
+//          }
+          s.replace(0, s.length(), Utils.moneyFormatter(s.toString()));
 
         } catch (NumberFormatException e) {
           s.replace(0, s.length(), s.toString().replaceAll("[a-zA-Z]", BLANK));

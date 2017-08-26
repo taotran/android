@@ -37,7 +37,9 @@ public class MyMainActivity extends AppCompatActivity
   private AdaptableBottomNavigationView bottomNavigationView;
   private ViewSwapperAdapter viewSwapperAdapter;
   private ViewSwapper viewSwapper;
+  private ConfigFragment configFragment;
 
+  private ConfigObject configObj;
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState)
   {
@@ -56,11 +58,12 @@ public class MyMainActivity extends AppCompatActivity
 
   public void onCalculateClick(View view)
   {
-    final String salaryString = ((EditText) findViewById(R.id.salaryEditText)).getText().toString().replaceAll(",", "");
+    final String salaryVNDString = ((EditText) findViewById(R.id.salaryEditText)).getText().toString().replaceAll(",", "");
+    final String salaryUSDString = ((EditText) findViewById(R.id.salaryUSDEditText)).getText().toString().replaceAll(",", "");
     final String noOfDependence = ((Spinner) findViewById(R.id.dependenceSpinner)).getSelectedItem().toString();
 
 
-    if (salaryString.trim().isEmpty()) {
+    if (salaryVNDString.trim().isEmpty()) {
 
       final AlertDialog.Builder dialog;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -102,11 +105,10 @@ public class MyMainActivity extends AppCompatActivity
     final Double finalResult;
 
     if (net2GrossCheckBox.isChecked()) {
-      calculator = new NetToGrossCalculator(Double.parseDouble(salaryString), Integer.parseInt(noOfDependence), details);
-
+      calculator = new NetToGrossCalculator(Double.parseDouble(salaryVNDString), Double.parseDouble(salaryUSDString), Integer.parseInt(noOfDependence), details, configObj);
     }
     else {
-      calculator = new GrossToNetCalculator(Double.parseDouble(salaryString), Integer.parseInt(noOfDependence), details);
+      calculator = new GrossToNetCalculator(Double.parseDouble(salaryVNDString), Double.parseDouble(salaryUSDString), Integer.parseInt(noOfDependence), details, configObj);
     }
     finalResult = calculator.calculate();
 
@@ -131,10 +133,23 @@ public class MyMainActivity extends AppCompatActivity
   public void onConfigurationClick(View view) {
     FragmentManager fragmentManager = getSupportFragmentManager();
 
-    ConfigFragment configFragment = new ConfigFragment();
-//    Bundle args = new Bundle();
+    configFragment = new ConfigFragment();
+    Bundle args = new Bundle();
+
 //    args.putParcelable("configObject", new ConfigObject());
-//    configFragment.setArguments();
+    args.putSerializable("configObject", configObj);
+    configFragment.setArguments(args);
     configFragment.show(fragmentManager, "Configuration");
+
+
+
+    configFragment.setDialogFinish(new ConfigFragment.OnDialogFinish()
+    {
+      @Override
+      public void onFinish(ConfigObject configObject)
+      {
+        configObj = configObject;
+      }
+    });
   }
 }

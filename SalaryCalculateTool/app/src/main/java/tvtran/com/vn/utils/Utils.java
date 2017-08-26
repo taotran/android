@@ -20,6 +20,13 @@ import java.util.*;
 public class Utils
 {
 
+  private static final String COMMA = ",";
+  private static final String BLANK = "";
+
+  private static final int THOUSANDS = 4;
+  private static final int MILLIONS = 7;
+  private static final int BILLIONS = 10;
+
   public static List<Detail> init()
   {
     final List<Detail> details = new ArrayList<>();
@@ -112,21 +119,6 @@ public class Utils
 
   }
 
-  public static String formattedDouble(double number)
-  {
-    if (number < 1000) {
-      return String.valueOf(number);
-    }
-    try {
-      NumberFormat formatter = new DecimalFormat("###,###");
-      String resp = formatter.format(number);
-//      resp = resp.replaceAll(",", ".");
-      return resp;
-    } catch (Exception e) {
-      return "";
-    }
-  }
-
   public static List<City> createCities()
   {
     final City hcm = new City(1, "Tp. Hồ Chí Minh");
@@ -203,6 +195,64 @@ public class Utils
 
     return districtDetailMap;
   }
+
+
+  public static Double calculateTotalSalary(Double salaryVND, Double salaryUSD, Double currRate) {
+    if (salaryUSD <= 0)
+      return salaryVND;
+
+    return salaryVND + (currRate*salaryUSD);
+  }
+
+  public static String moneyFormatter(String unformattedInput) throws NumberFormatException{
+
+    final String replacedComma = unformattedInput.replaceAll(COMMA, BLANK);
+    // for checking only
+    Integer.parseInt(replacedComma);
+
+    int numberOfChar = replacedComma.length();
+    String tempStr = unformattedInput;
+    //1.000 -> 100.000
+    if (numberOfChar >= THOUSANDS && numberOfChar < MILLIONS) {
+      int commaPos = numberOfChar - 3;
+      tempStr = insertComma(replacedComma, commaPos);
+    }
+    //1.000.000 -> 100.000.000
+    else if (numberOfChar >= MILLIONS && numberOfChar < BILLIONS) {
+      int firstComma = numberOfChar - 6;
+      int secondComma = numberOfChar - 2;
+
+      tempStr = insertComma(replacedComma, firstComma);
+      tempStr = insertComma(tempStr, secondComma);
+    }
+    //1.000.000.000
+    else if (numberOfChar >= BILLIONS) {
+      int firstComma = numberOfChar - 9;
+      int secondComma = numberOfChar - 5;
+      int thirdComma = numberOfChar - 1;
+      tempStr = insertComma(replacedComma, firstComma);
+      tempStr = insertComma(tempStr, secondComma);
+      tempStr = insertComma(tempStr, thirdComma);
+    }
+
+    return tempStr;
+  }
+
+  public static String formattedDouble(double number)
+  {
+    if (number < 1000) {
+      return String.valueOf(number);
+    }
+    try {
+      NumberFormat formatter = new DecimalFormat("###,###");
+      String resp = formatter.format(number);
+//      resp = resp.replaceAll(",", ".");
+      return resp;
+    } catch (Exception e) {
+      return "";
+    }
+  }
+
 
   @NonNull
   public static String insertChar(String s, int pos, String charToInsert)

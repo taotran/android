@@ -1,5 +1,6 @@
 package tvtran.com.vn.service;
 
+import tvtran.com.vn.entity.ConfigObject;
 import tvtran.com.vn.entity.Detail;
 
 import java.util.List;
@@ -22,15 +23,15 @@ public class GrossToNetCalculator extends AbstractCalculator
 
   //@formatter:on
 
-  public GrossToNetCalculator(Double inputSalary, Integer numberOfDependencies, Map<Integer, List<Detail>> detailsMap)
+  public GrossToNetCalculator(Double inputSalaryVND, Double inputSalaryUSD, Integer numberOfDependencies, Map<Integer, List<Detail>> detailsMap, ConfigObject configObject)
   {
-    super(inputSalary, numberOfDependencies, detailsMap);
+    super(inputSalaryVND, inputSalaryUSD, numberOfDependencies, detailsMap, configObject);
   }
 
   public double calculate()
   {
-    writeContentToDetailList(detailList, 0, formattedDouble(inputSalary));
-    double salaryAfterInsurancesSubtraction = calcInsurancesSubtraction(inputSalary);
+    writeContentToDetailList(detailList, 0, formattedDouble(totalSalary));
+    double salaryAfterInsurancesSubtraction = calcInsurancesSubtraction(totalSalary);
 
     //Thu nhap truoc thue
     writeContentToDetailList(detailList, 4, formattedDouble(salaryAfterInsurancesSubtraction));
@@ -42,7 +43,7 @@ public class GrossToNetCalculator extends AbstractCalculator
     writeContentToDetailList(detailList, 9, formattedDouble(finalSalary));
 
     //call to output EmployerDetails only
-    calcEmployerTotalPaid(inputSalary);
+    calcEmployerTotalPaid(totalSalary);
 
     return finalSalary;
   }

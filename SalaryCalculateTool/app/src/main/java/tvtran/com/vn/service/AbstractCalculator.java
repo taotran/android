@@ -1,7 +1,9 @@
 package tvtran.com.vn.service;
 
 import tvtran.com.vn.constant.InsuranceMaxRange;
+import tvtran.com.vn.entity.ConfigObject;
 import tvtran.com.vn.entity.Detail;
+import tvtran.com.vn.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +14,7 @@ import static tvtran.com.vn.utils.Utils.writeContentToDetailList;
 
 /**
  * This class provides GROSS > NET functions(not all) which are also used in NET > GROSS for output details information
- *
+ * <p>
  * Property of CODIX Bulgaria EAD
  * Created by tvtran
  * Date:  6/28/2017
@@ -43,20 +45,30 @@ public abstract class AbstractCalculator implements ICalculator
   private static final double MAX_TNCN_32_52_MIL          = 5000000;
   private static final double MAX_TNCN_52_80_MIL          = 8400000;
 
-  protected Double inputSalary;
+  protected Double totalSalary;
+//  protected Double inputSalaryVND;
+//  protected Double inputSalaryUSD;
   protected int numberOfDependencies;
 
   protected List<Detail> detailList = new ArrayList<>();
   protected List<Detail> detailTNCNList = new ArrayList<>();
   protected List<Detail> employerDetailList = new ArrayList<>();
+  private ConfigObject configObject;
 
-  public AbstractCalculator(Double inputSalary, int numberOfDependencies, Map<Integer, List<Detail>> detailsMap)
+  public AbstractCalculator(Double inputSalaryVND, Double inputSalaryUSD, int numberOfDependencies, Map<Integer, List<Detail>> detailsMap, ConfigObject configObject)
   {
-    this.inputSalary = inputSalary;
+//    this.inputSalaryVND = inputSalaryVND;
+//    this.inputSalaryUSD = inputSalaryUSD;
     this.numberOfDependencies = numberOfDependencies;
+    this.configObject = configObject == null ? new ConfigObject() : configObject;
+    this.totalSalary = Utils.calculateTotalSalary(inputSalaryVND, inputSalaryUSD, this.configObject.getCurrRate());
     this.detailList = detailsMap.get(1);
     this.detailTNCNList = detailsMap.get(2);
     this.employerDetailList = detailsMap.get(3);
+  }
+
+  public AbstractCalculator(Double inputSalaryVND, Double inputSalaryUSD, int numberOfDependencies, Map<Integer, List<Detail>> detailsMap) {
+    this(inputSalaryVND, inputSalaryVND, numberOfDependencies, detailsMap, new ConfigObject());
   }
 
   //@formatter:on
@@ -145,12 +157,12 @@ public abstract class AbstractCalculator implements ICalculator
     }
 
     writeContentToDetailList(detailTNCNList, 0, "5%", formattedDouble(underFiveRangeTax));
-    writeContentToDetailList(detailTNCNList, 1, "10%",formattedDouble(fiveToTenMilRangeTax));
-    writeContentToDetailList(detailTNCNList, 2, "15%",formattedDouble(tenToEighteenMilRangeTax));
-    writeContentToDetailList(detailTNCNList, 3, "20%",formattedDouble(eighteenToThirtyTwoMilRangeTax));
-    writeContentToDetailList(detailTNCNList, 4, "25%",formattedDouble(thirtyTwoToFiftyTwoMilRangeTax));
-    writeContentToDetailList(detailTNCNList, 5, "30%",formattedDouble(fiftyTwoToEightyMilRangeTax));
-    writeContentToDetailList(detailTNCNList, 6, "35%",formattedDouble(aboveEightyMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 1, "10%", formattedDouble(fiveToTenMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 2, "15%", formattedDouble(tenToEighteenMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 3, "20%", formattedDouble(eighteenToThirtyTwoMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 4, "25%", formattedDouble(thirtyTwoToFiftyTwoMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 5, "30%", formattedDouble(fiftyTwoToEightyMilRangeTax));
+    writeContentToDetailList(detailTNCNList, 6, "35%", formattedDouble(aboveEightyMilRangeTax));
 
 
     taxTotal = aboveEightyMilRangeTax
