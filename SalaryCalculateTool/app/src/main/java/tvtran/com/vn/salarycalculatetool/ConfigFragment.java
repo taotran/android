@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import tvtran.com.vn.entity.ConfigObject;
+import tvtran.com.vn.utils.CurrencyTextWatcher;
 import tvtran.com.vn.utils.Utils;
 
 /**
@@ -60,14 +61,15 @@ public class ConfigFragment extends DialogFragment implements View.OnClickListen
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState)
   {
-
     super.onCreate(savedInstanceState);
-
   }
 
   @Override
   public void onResume()
   {
+    final EditText baseSalaryEditText = (EditText) getView().findViewById(R.id.editTextConfBaseSal);
+    baseSalaryEditText.addTextChangedListener(new CurrencyTextWatcher());
+
     super.onResume();
   }
 

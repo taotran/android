@@ -3,8 +3,6 @@ package tvtran.com.vn.salarycalculatetool;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import tvtran.com.vn.utils.Utils;
-
-import static tvtran.com.vn.utils.Utils.insertComma;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import tvtran.com.vn.utils.CurrencyTextWatcher;
 
 /**
  * Property of CODIX Bulgaria EAD
@@ -26,19 +26,46 @@ public class CalcFragment extends Fragment
 
   private static final String DEFAULT_FINAL_RESULT_TEXT = "Salary Amount";
 
-  private static final String COMMA = ",";
-  private static final String BLANK = "";
-
-  private static final int THOUSANDS = 4;
-  private static final int MILLIONS = 7;
-  private static final int BILLIONS = 10;
-
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
   {
-    return inflater.inflate(R.layout.fragment_salary_calc, container, false);
+    final View view = inflater.inflate(R.layout.fragment_salary_calc, container, false);
+    MobileAds.initialize(getContext(), "adView");
+    AdView adView = (AdView)view.findViewById(R.id.adView);
+    adView.setAdListener(new AdListener() {
+      @Override
+      public void onAdLoaded()
+      {
+        System.out.println("add loaded");
+        super.onAdLoaded();
+      }
+
+      @Override
+      public void onAdFailedToLoad(int i)
+      {
+        System.out.println("ad failed to load");
+      }
+    });
+
+    //ca-app-pub-7600696968336513~9499349953
+    //A007382C43BF8253883D93971C7FAAE4
+    //ThueTNCNAd
+//    AdRequest adRequest = new AdRequest.Builder().addTestDevice("A007382C43BF8253883D93971C7FAAE4").build();
+    AdRequest adRequest = new AdRequest.Builder().build();
+//    adRequest.isTestDevice(getContext());
+    adView.loadAd(adRequest);
+    return view;
   }
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState)
+  {
+    super.onCreate(savedInstanceState);
+
+  }
+
+
 
   @Override
   public void onResume()
@@ -64,101 +91,6 @@ public class CalcFragment extends Fragment
   public void onStart()
   {
     super.onStart();
-  }
-
-  class CurrencyTextWatcher implements TextWatcher
-  {
-
-    boolean mEditing;
-
-    CurrencyTextWatcher()
-    {
-      mEditing = false;
-    }
-
-    //TODO: optimization needed!!!
-    public synchronized void afterTextChanged(Editable s)
-    {
-      if (!mEditing) {
-        mEditing = true;
-//        final String replacedComma = s.toString().replaceAll(COMMA, BLANK);
-
-        try {
-          // for checking only
-//          Integer.parseInt(replacedComma);
-
-//          int numberOfChar = replacedComma.length();
-//          String tempStr = s.toString();
-//          //1.000 -> 100.000
-//          if (numberOfChar >= THOUSANDS && numberOfChar < MILLIONS) {
-//            int commaPos = numberOfChar - 3;
-//            tempStr = insertComma(replacedComma, commaPos);
-//          }
-//          //1.000.000 -> 100.000.000
-//          else if (numberOfChar >= MILLIONS && numberOfChar < BILLIONS) {
-//            int firstComma = numberOfChar - 6;
-//            int secondComma = numberOfChar - 2;
-//
-//            tempStr = insertComma(replacedComma, firstComma);
-//            tempStr = insertComma(tempStr, secondComma);
-//          }
-//          //1.000.000.000
-//          else if (numberOfChar >= BILLIONS) {
-//            int firstComma = numberOfChar - 9;
-//            int secondComma = numberOfChar - 5;
-//            int thirdComma = numberOfChar - 1;
-//            tempStr = insertComma(replacedComma, firstComma);
-//            tempStr = insertComma(tempStr, secondComma);
-//            tempStr = insertComma(tempStr, thirdComma);
-//          }
-          s.replace(0, s.length(), Utils.moneyFormatter(s.toString()));
-
-        } catch (NumberFormatException e) {
-          s.replace(0, s.length(), s.toString().replaceAll("[a-zA-Z]", BLANK));
-        } finally {
-          mEditing = false;
-        }
-      }
-
-
-    }
-
-    public void beforeTextChanged(CharSequence s, int start, int count, int after)
-    {
-    }
-
-    public void onTextChanged(CharSequence s, int start, int before, int count)
-    {
-    }
-
-    /*String moneyFormatter(String unformattedInput) {
-      final String replacedComma = unformattedInput.replaceAll(COMMA, BLANK);
-      int numberOfChar = unformattedInput.length();
-      String tempStr = unformattedInput;
-      //1.000 -> 100.000
-      if (numberOfChar >= THOUSANDS && numberOfChar < MILLIONS) {
-        int commaPos = numberOfChar - 3;
-        tempStr = insertComma(replacedComma, commaPos);
-      }
-      //1.000.000 -> 100.000.000
-      else if (numberOfChar >= MILLIONS && numberOfChar < BILLIONS) {
-        int firstComma = numberOfChar - 6;
-        int secondComma = numberOfChar - 2;
-
-        tempStr = insertComma(replacedComma, firstComma);
-        tempStr = insertComma(tempStr, secondComma);
-      }
-      //1.000.000.000
-      else if (numberOfChar >= BILLIONS) {
-        int firstComma = numberOfChar - 9;
-        int secondComma = numberOfChar - 5;
-        int thirdComma = numberOfChar - 1;
-        tempStr = insertComma(replacedComma, firstComma);
-        tempStr = insertComma(tempStr, secondComma);
-        tempStr = insertComma(tempStr, thirdComma);
-      }
-    }*/
-
   }
 
 }

@@ -53,7 +53,7 @@ public abstract class AbstractCalculator implements ICalculator
   protected List<Detail> detailList = new ArrayList<>();
   protected List<Detail> detailTNCNList = new ArrayList<>();
   protected List<Detail> employerDetailList = new ArrayList<>();
-  private ConfigObject configObject;
+  protected ConfigObject configObject;
 
   public AbstractCalculator(Double inputSalaryVND, Double inputSalaryUSD, int numberOfDependencies, Map<Integer, List<Detail>> detailsMap, ConfigObject configObject)
   {
@@ -75,9 +75,9 @@ public abstract class AbstractCalculator implements ICalculator
   @Override
   public Double calcInsurancesSubtraction(Double salary)
   {
-    final double appliedBHXH = salary <= InsuranceMaxRange.MAX_BHXH_BHYT_RANGE ? salary * BHXH : InsuranceMaxRange.DEFAULT_OVER_RANGE_BHXH;
-    final double appliedBHYT = salary <= InsuranceMaxRange.MAX_BHXH_BHYT_RANGE ? salary * BHYT : InsuranceMaxRange.DEFAULT_OVER_RANGE_BHYT;
-    final double appliedBHTN = salary <= InsuranceMaxRange.MAX_BHTN_AREA1_RANGE ? salary * BHTN : InsuranceMaxRange.DEFAULT_OVER_RANGE_BHTN;
+    final double appliedBHXH = salary <= InsuranceMaxRange.MAX_BHXH_BHYT_RANGE ? salary * (configObject.getRateBHXH()/100) : InsuranceMaxRange.DEFAULT_OVER_RANGE_BHXH;
+    final double appliedBHYT = salary <= InsuranceMaxRange.MAX_BHXH_BHYT_RANGE ? salary * (configObject.getRateBHYT()/100) : InsuranceMaxRange.DEFAULT_OVER_RANGE_BHYT;
+    final double appliedBHTN = salary <= InsuranceMaxRange.MAX_BHTN_AREA1_RANGE ? salary * (configObject.getRateBHTN()/100) : InsuranceMaxRange.DEFAULT_OVER_RANGE_BHTN;
 
     writeContentToDetailList(detailList, 1, formattedDouble(appliedBHXH));
     writeContentToDetailList(detailList, 2, formattedDouble(appliedBHYT));

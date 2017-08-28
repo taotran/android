@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:mask="http://schemas.android.com/apk/res-auto"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -92,19 +92,18 @@
             android:onClick="onCalculateClick"
             android:elevation="0dp" android:textSize="10sp"
             style="@style/Widget.AppCompat.Button.Colored"
-            android:background="@color/colorCustom"
+            android:background="@android:color/holo_red_dark"
             android:layout_marginBottom="19dp"
             android:text="Tính"
             android:layout_width="40dp"
             android:layout_alignParentBottom="true" android:layout_alignStart="@+id/salaryUSDEditText"/>
     <ExpandableListView
-            android:layout_marginTop="10dp"
             android:id="@+id/detailExpandableListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/checkBoxNet2Gross" android:layout_alignParentStart="true"
+            android:layout_alignParentStart="true"
             android:layout_above="@+id/finalResultTextView"
-    />
+            android:layout_below="@+id/adView"/>
 
     <CheckBox
             android:text="NET > GROSS"
@@ -114,6 +113,16 @@
             android:layout_marginStart="-5dp"
             android:layout_below="@+id/dependenceSpinner" android:layout_toEndOf="@+id/textView"
             android:layout_alignStart="@+id/dependenceSpinner"/>
+
+    <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:adSize="BANNER"
+            app:adUnitId="ca-app-pub-7600696968336513/4183444091" android:layout_below="@+id/checkBoxNet2Gross"
+            android:layout_centerHorizontal="true"
+    >
+    </com.google.android.gms.ads.AdView>
 
     <Button
             android:text="THIẾT LẬP"
