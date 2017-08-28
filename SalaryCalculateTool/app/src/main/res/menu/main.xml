@@ -5,19 +5,26 @@
             android:id="@+id/action_one"
             android:enabled="true"
             android:title="@string/menu_calculate"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@mipmap/icon_tinhluong"
             app:showAsAction="ifRoom" />
 
     <item
             android:id="@+id/action_two"
             android:enabled="true"
             android:title="@string/menu_seeking"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@mipmap/icon_tracuu"
             app:showAsAction="ifRoom" />
     <item
             android:id="@+id/action_three"
             android:enabled="true"
             android:title="@string/menu_qanda"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@mipmap/icon_hoidap"
             app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_"
+        android:enabled="true"
+        android:title="@string/menu_about"
+        android:icon="@mipmap/icon_about"
+        app:showAsAction="ifRoom" />
 </menu>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
             android:text="Tra cứu BHXH Tỉnh/Thành phố:"
@@ -16,10 +17,21 @@
             android:layout_height="wrap_content"
             android:id="@+id/spinnerCity"
             android:layout_marginTop="12dp" android:layout_below="@+id/textView3"
-            android:layout_alignStart="@+id/textView3" android:spinnerMode="dialog"/>
+            android:layout_alignStart="@+id/textView3"/>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-7600696968336513/4183444091" android:layout_below="@+id/spinnerCity"
+        android:layout_centerHorizontal="true"
+        >
+    </com.google.android.gms.ads.AdView>
+
     <ExpandableListView
             android:id="@+id/expandableDistrictInCity"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" android:layout_below="@+id/spinnerCity"
+            android:layout_height="match_parent" android:layout_below="@+id/adView1"
             android:layout_alignParentStart="true" android:layout_marginStart="10dp" android:layout_marginTop="23dp"/>
 </RelativeLayout>

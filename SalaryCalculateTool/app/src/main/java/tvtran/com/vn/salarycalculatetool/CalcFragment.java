@@ -32,28 +32,12 @@ public class CalcFragment extends Fragment
   {
     final View view = inflater.inflate(R.layout.fragment_salary_calc, container, false);
     MobileAds.initialize(getContext(), "adView");
-    AdView adView = (AdView)view.findViewById(R.id.adView);
-    adView.setAdListener(new AdListener() {
-      @Override
-      public void onAdLoaded()
-      {
-        System.out.println("add loaded");
-        super.onAdLoaded();
-      }
-
-      @Override
-      public void onAdFailedToLoad(int i)
-      {
-        System.out.println("ad failed to load");
-      }
-    });
-
+    final AdView adView = (AdView)view.findViewById(R.id.adView);
     //ca-app-pub-7600696968336513~9499349953
     //A007382C43BF8253883D93971C7FAAE4
     //ThueTNCNAd
-//    AdRequest adRequest = new AdRequest.Builder().addTestDevice("A007382C43BF8253883D93971C7FAAE4").build();
+    //AdRequest adRequest = new AdRequest.Builder().addTestDevice("A007382C43BF8253883D93971C7FAAE4").build();
     AdRequest adRequest = new AdRequest.Builder().build();
-//    adRequest.isTestDevice(getContext());
     adView.loadAd(adRequest);
     return view;
   }

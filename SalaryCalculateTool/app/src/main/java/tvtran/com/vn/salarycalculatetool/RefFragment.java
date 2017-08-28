@@ -9,6 +9,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import tvtran.com.vn.adapter.CitySpinnerAdapter;
 import tvtran.com.vn.adapter.ExpandableDistrictAdapter;
 import tvtran.com.vn.entity.City;
@@ -26,7 +31,18 @@ public class RefFragment extends Fragment
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
   {
-    return inflater.inflate(R.layout.fragment_ref, container, false);
+    final View view = inflater.inflate(R.layout.fragment_ref, container, false);
+    MobileAds.initialize(getContext(), "adView1");
+    AdView adView = (AdView)view.findViewById(R.id.adView1);
+
+    //ca-app-pub-7600696968336513~9499349953
+    //A007382C43BF8253883D93971C7FAAE4
+    //ThueTNCNAd
+    //AdRequest adRequest = new AdRequest.Builder().addTestDevice("A007382C43BF8253883D93971C7FAAE4").build();
+    AdRequest adRequest = new AdRequest.Builder().build();
+    adView.loadAd(adRequest);
+    return view;
+
   }
 
   @Override
