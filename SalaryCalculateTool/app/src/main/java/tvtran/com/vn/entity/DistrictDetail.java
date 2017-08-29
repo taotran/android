@@ -8,6 +8,10 @@ package tvtran.com.vn.entity;
 public class DistrictDetail implements IdentifiableEntity
 {
 
+  public DistrictDetail() {
+
+  }
+
   public DistrictDetail(int districtId, String address, String contactInfo, String others)
   {
     this.districtId = districtId;

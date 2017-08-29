@@ -19,20 +19,18 @@ import java.util.List;
 public class CitySpinnerAdapter extends ArrayAdapter<City>
 {
   private LayoutInflater inflater;
+  private List<City> objects;
 
   public CitySpinnerAdapter(Context context, List<City> objects)
   {
     super(context, 0, objects);
     this.inflater = LayoutInflater.from(context);
+    this.objects = objects;
   }
 
   @Override
   public View getView(int position, View convertView, ViewGroup parent)
   {
-//    final Conve
-//    ViewHolder viewHolder = (ViewHolder) build(convertView).getTag();
-//    viewHolder.cityNameTextView.setText(getItem(position).getName());
-
     return build(convertView, position);
   }
 
@@ -59,6 +57,12 @@ public class CitySpinnerAdapter extends ArrayAdapter<City>
     }
     viewHolder.cityNameTextView.setText(getItem(position).getName());
     return convertView;
+  }
+
+  @Override
+  public long getItemId(int position)
+  {
+    return getItem(position).getId();
   }
 
   private static class ViewHolder

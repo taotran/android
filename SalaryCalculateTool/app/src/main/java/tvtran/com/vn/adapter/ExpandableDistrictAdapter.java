@@ -59,6 +59,13 @@ public class ExpandableDistrictAdapter extends AbstractExpandableListAdapter<Dis
     return convertView;
   }
 
+
+  @Override
+  public long getGroupId(int groupPosition)
+  {
+    return _listDataHeader.get(groupPosition).getCityId();
+  }
+
   @Override
   public boolean isChildSelectable(int groupPosition, int childPosition)
   {

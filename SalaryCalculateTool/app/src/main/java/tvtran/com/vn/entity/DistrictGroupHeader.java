@@ -44,4 +44,19 @@ public class DistrictGroupHeader implements ExpandableGroupEntity
   {
     return cityId;
   }
+
+  public void setId(int id)
+  {
+    this.id = id;
+  }
+
+  public void setCityId(int cityId)
+  {
+    this.cityId = cityId;
+  }
+
+  public void setDisplayValue(String displayValue)
+  {
+    this.displayValue = displayValue;
+  }
 }

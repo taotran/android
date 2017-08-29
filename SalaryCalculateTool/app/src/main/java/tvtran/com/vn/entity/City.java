@@ -10,6 +10,10 @@ public class City implements IdentifiableEntity
   private int id;
   private String name;
 
+  public City(){
+
+  }
+
   public City(int id, String name)
   {
     this.id = id;
