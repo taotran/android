@@ -4,7 +4,13 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <TextView
+            android:text="Tổng hợp các câu hỏi thường gặp về BHXH, các bạn có thể nhấn vào câu hỏi để có được câu trả lời."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/textView9" android:textStyle="bold"
+            android:textColor="@color/colorBlack"/>
     <ListView
+            android:layout_marginTop="15dp"
             android:id="@+id/qandaListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

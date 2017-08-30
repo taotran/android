@@ -1,6 +1,5 @@
 package tvtran.com.vn.salarycalculatetool;
 
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,7 +36,7 @@ public class MyMainActivity extends AppCompatActivity
   private AdaptableBottomNavigationView bottomNavigationView;
   private ViewSwapperAdapter viewSwapperAdapter;
   private ViewSwapper viewSwapper;
-  private ConfigFragment configFragment;
+  private ConfigDialogFragment configFragment;
 
   private ConfigObject configObj;
   @Override
@@ -133,7 +132,7 @@ public class MyMainActivity extends AppCompatActivity
   public void onConfigurationClick(View view) {
     FragmentManager fragmentManager = getSupportFragmentManager();
 
-    configFragment = new ConfigFragment();
+    configFragment = new ConfigDialogFragment();
     Bundle args = new Bundle();
 
 //    args.putParcelable("configObject", new ConfigObject());
@@ -143,7 +142,7 @@ public class MyMainActivity extends AppCompatActivity
 
 
 
-    configFragment.setDialogFinish(new ConfigFragment.OnDialogFinish()
+    configFragment.setDialogFinish(new ConfigDialogFragment.OnDialogFinish()
     {
       @Override
       public void onFinish(ConfigObject configObject)

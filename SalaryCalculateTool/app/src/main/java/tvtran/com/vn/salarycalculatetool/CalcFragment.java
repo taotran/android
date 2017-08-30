@@ -43,15 +43,6 @@ public class CalcFragment extends Fragment
   }
 
   @Override
-  public void onCreate(@Nullable Bundle savedInstanceState)
-  {
-    super.onCreate(savedInstanceState);
-
-  }
-
-
-
-  @Override
   public void onResume()
   {
     final Spinner spinner = (Spinner) getActivity().findViewById(R.id.dependenceSpinner);

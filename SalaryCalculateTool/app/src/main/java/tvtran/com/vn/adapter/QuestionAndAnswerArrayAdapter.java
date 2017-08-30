@@ -20,17 +20,18 @@ public class QuestionAndAnswerArrayAdapter extends ArrayAdapter
 {
   private List<QuestionAndAnswer> objects;
 
-  public QuestionAndAnswerArrayAdapter(Context context, int resourceId, List<QuestionAndAnswer> questionAndAnswers)
+  public QuestionAndAnswerArrayAdapter(Context context, List<QuestionAndAnswer> questionAndAnswers)
   {
-    super(context, resourceId);
+    super(context, 0);
     this.objects = questionAndAnswers;
   }
 
   @Override
   public View getView(int position, View convertView, ViewGroup parent)
   {
-    LayoutInflater inflater = LayoutInflater.from(getContext());
-    ViewHolder viewHolder;
+    final LayoutInflater inflater = LayoutInflater.from(getContext());
+    final ViewHolder viewHolder;
+    final QuestionAndAnswer obj = objects.get(position);
     if (convertView == null) {
       convertView = inflater.inflate(R.layout.single_qanda_item, null);
       viewHolder = new ViewHolder();
@@ -41,12 +42,17 @@ public class QuestionAndAnswerArrayAdapter extends ArrayAdapter
     }
 
     viewHolder.questionTextView = (TextView) convertView.findViewById(R.id.questionTextView);
-    viewHolder.questionTextView.setText(objects.get(position).getQuestion());
+    viewHolder.questionTextView.setText(obj.getId() + ". " + obj.getShortQuestion());
 
     return convertView;
   }
 
 
+  @Override
+  public int getCount()
+  {
+    return objects.size();
+  }
 
   static class ViewHolder
   {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SalaryCalculateTool</string>
+    <string name="app_name">Thuế TNCN</string>
     <string name="salary">Lương</string>
     <string name="no_of_dependence">Phụ thuộc</string>
     <string name="calculate">Calculate</string>

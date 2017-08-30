@@ -40,13 +40,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper
     this.mContext = context;
     this.databasePath = ("data/data/" + context.getPackageName() + "/" + DB_NAME);
     this.databaseFile = new File(this.databasePath);
-    //if (!this.databaseFile.exists()) {
+    if (!this.databaseFile.exists()) {
       try {
         deployDataBase(DB_NAME, this.databasePath);
       } catch (IOException localIOException) {
         localIOException.printStackTrace();
       }
-//    }
+    }
   }
 
   private void deployDataBase(String dbName, String dbPath)

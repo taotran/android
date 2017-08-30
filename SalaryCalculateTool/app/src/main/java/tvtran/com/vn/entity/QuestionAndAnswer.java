@@ -1,11 +1,13 @@
 package tvtran.com.vn.entity;
 
+import java.io.Serializable;
+
 /**
  * Property of CODIX Bulgaria EAD
  * Created by tvtran
  * Date:  8/29/2017
  */
-public class QuestionAndAnswer
+public class QuestionAndAnswer implements Serializable
 {
   private int id;
   private String shortQuestion;

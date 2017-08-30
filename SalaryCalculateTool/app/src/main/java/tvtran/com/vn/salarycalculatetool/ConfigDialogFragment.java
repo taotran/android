@@ -17,14 +17,14 @@ import tvtran.com.vn.utils.Utils;
  * Created by tvtran
  * Date:  8/21/2017
  */
-public class ConfigFragment extends DialogFragment implements View.OnClickListener
+public class ConfigDialogFragment extends DialogFragment implements View.OnClickListener
 {
 
   private ConfigObject configObject;
   private OnDialogFinish dialogFinish;
   private boolean isSaved;
 
-  public ConfigFragment()
+  public ConfigDialogFragment()
   {
 
   }
@@ -33,7 +33,7 @@ public class ConfigFragment extends DialogFragment implements View.OnClickListen
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
   {
-    View view = inflater.inflate(R.layout.fragment_config, container, false);
+    View view = inflater.inflate(R.layout.fragment_dialog_config, container, false);
     configObject = (ConfigObject) getArguments().getSerializable("configObject");
     if (configObject == null) {
       configObject = new ConfigObject();
