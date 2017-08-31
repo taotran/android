@@ -31,7 +31,7 @@ public class QAndADialogFragment extends DialogFragment
 
     fullQuestion.setText(receivedQuestionAndAnswer.getQuestion());
     fullAnswer.setText(receivedQuestionAndAnswer.getAnswer());
-
+    System.out.println("===========LW: " + fullQuestion.getMeasuredHeight());
     return view;
   }
 }

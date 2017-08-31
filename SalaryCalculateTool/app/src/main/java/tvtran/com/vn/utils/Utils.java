@@ -3,14 +3,14 @@ package tvtran.com.vn.utils;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.view.inputmethod.InputMethodManager;
-import tvtran.com.vn.entity.City;
 import tvtran.com.vn.entity.Detail;
-import tvtran.com.vn.entity.DistrictDetail;
-import tvtran.com.vn.entity.DistrictGroupHeader;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Property of CODIX Bulgaria EAD
@@ -119,14 +119,17 @@ public class Utils
 
   }
 
-  public static Double calculateTotalSalary(Double salaryVND, Double salaryUSD, Double currRate) {
-    if (salaryUSD <= 0)
+  public static Double calculateTotalSalary(Double salaryVND, Double salaryUSD, Double currRate)
+  {
+    if (salaryUSD <= 0) {
       return salaryVND;
+    }
 
-    return salaryVND + (currRate*salaryUSD);
+    return salaryVND + (currRate * salaryUSD);
   }
 
-  public static String moneyFormatter(String unformattedInput) throws NumberFormatException{
+  public static String moneyFormatter(String unformattedInput) throws NumberFormatException
+  {
 
     final String replacedComma = unformattedInput.replaceAll(COMMA, BLANK);
     // for checking only
@@ -175,6 +178,11 @@ public class Utils
     }
   }
 
+
+  public static double threeDigitsRoundUp(double doubleVal)
+  {
+    return (double) Math.round(doubleVal * 1000) / 1000;
+  }
 
   @NonNull
   public static String insertChar(String s, int pos, String charToInsert)

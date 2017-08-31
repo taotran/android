@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static tvtran.com.vn.utils.Utils.threeDigitsRoundUp;
+
 /**
  * Property of CODIX Bulgaria EAD
  * Created by tvtran
@@ -39,6 +41,7 @@ public class MyMainActivity extends AppCompatActivity
   private ConfigDialogFragment configFragment;
 
   private ConfigObject configObj;
+
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState)
   {
@@ -119,7 +122,11 @@ public class MyMainActivity extends AppCompatActivity
 
     final TextView resultTextView = (TextView) findViewById(R.id.resultTextView);
     resultTextView.setVisibility(View.VISIBLE);
-    resultTextView.setText(Utils.formattedDouble(finalResult));
+    if (configObj == null) {
+      configObj = new ConfigObject();
+    }
+    final double finalResultInUSD = finalResult / configObj.getCurrRate();
+    resultTextView.setText(Utils.formattedDouble(threeDigitsRoundUp(finalResult)) + " ~  " + Utils.formattedDouble(threeDigitsRoundUp(finalResultInUSD)) + "$");
 
     final TextView finalResultTextView = (TextView) findViewById(R.id.finalResultTextView);
     finalResultTextView.setVisibility(View.VISIBLE);
@@ -129,17 +136,16 @@ public class MyMainActivity extends AppCompatActivity
     expandableListView.expandGroup(2, true);
   }
 
-  public void onConfigurationClick(View view) {
+  public void onConfigurationClick(View view)
+  {
     FragmentManager fragmentManager = getSupportFragmentManager();
 
     configFragment = new ConfigDialogFragment();
     Bundle args = new Bundle();
 
-//    args.putParcelable("configObject", new ConfigObject());
     args.putSerializable("configObject", configObj);
     configFragment.setArguments(args);
     configFragment.show(fragmentManager, "Configuration");
-
 
 
     configFragment.setDialogFinish(new ConfigDialogFragment.OnDialogFinish()

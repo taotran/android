@@ -69,7 +69,7 @@ public class NetToGrossCalculator extends AbstractCalculator
 
 
     // Luong GROSS
-    writeContentToDetailList(detailList, 0, formattedDouble(finalGrossSalary));
+    writeContentToDetailList(detailList, 0, formattedDouble((double) Math.round(finalGrossSalary * 1000) / 1000));
     // Luong NET
     writeContentToDetailList(detailList, 9, formattedDouble(totalSalary));
 
@@ -86,11 +86,11 @@ public class NetToGrossCalculator extends AbstractCalculator
   public Double calcDependenciesSubtraction(int numberOfDependencies, Double netSalary)
   {
     System.out.println("numberOfDependencies = [" + numberOfDependencies + "], netSalary = [" + netSalary + "]");
-    if (netSalary <= GIAM_TRU_GIA_CANH_BAN_THAN)
-      return 0.0;
+//    if (netSalary <= GIAM_TRU_GIA_CANH_BAN_THAN)
+//      return netSalary;
 
     final double dependenciesDeduction = numberOfDependencies * GIA_CANH_PHU_THUOC;
-    final double result = netSalary - GIAM_TRU_GIA_CANH_BAN_THAN - dependenciesDeduction;
+    final double result = netSalary > (GIAM_TRU_GIA_CANH_BAN_THAN + dependenciesDeduction) ? netSalary - (GIAM_TRU_GIA_CANH_BAN_THAN + dependenciesDeduction): 0.0;
     // giam tru ban than (5)
     writeContentToDetailList(detailList, 5, formattedDouble(GIAM_TRU_GIA_CANH_BAN_THAN));
 
@@ -145,14 +145,24 @@ public class NetToGrossCalculator extends AbstractCalculator
 //    return salaryBeforeTax < MAX_SAL_FOR_BHXH_BHYT ? (salaryBeforeTax) / 0.895 : (salaryBeforeTax + InsuranceMaxRange.DEFAULT_OVER_RANGE_BHXH + InsuranceMaxRange.DEFAULT_OVER_RANGE_BHYT) / (1 - 0.01);
     final double totalInsurancesRate = (configObject.getRateBHXH() + configObject.getRateBHYT()) / 100; //TODO: check this
 
-    return salaryBeforeTax < (configObject.getBaseSalary() * MAX_SAL_FOR_BHXH_BHYT_TIMES) ? (salaryBeforeTax) / 0.895 : salaryBeforeTax + InsuranceMaxRange.DEFAULT_OVER_RANGE_BHXH + InsuranceMaxRange.DEFAULT_OVER_RANGE_BHYT + InsuranceMaxRange.DEFAULT_OVER_RANGE_BHTN;
+    final double result = salaryBeforeTax < (configObject.getBaseSalary() * MAX_SAL_FOR_BHXH_BHYT_TIMES) ? (salaryBeforeTax) / 0.895 : salaryBeforeTax + InsuranceMaxRange.DEFAULT_OVER_RANGE_BHXH + InsuranceMaxRange.DEFAULT_OVER_RANGE_BHYT + InsuranceMaxRange.DEFAULT_OVER_RANGE_BHTN;
+
+    return result;
   }
 
   final Double calcSalaryBeforeTax(Double appliedThueTNCNSalary, int numberOfDependencies)
   {
     //TODO: check
-    if (appliedThueTNCNSalary <= 0)
+    if (appliedThueTNCNSalary < 0) {
+      // TN truoc thue
+      writeContentToDetailList(detailList, 4, formattedDouble(totalSalary));
       return 0.0;
+    }
+
+    if (appliedThueTNCNSalary == 0 && totalSalary <= GIAM_TRU_GIA_CANH_BAN_THAN) {
+      writeContentToDetailList(detailList, 4, formattedDouble(totalSalary));
+      return totalSalary;
+    }
 
     final double result = appliedThueTNCNSalary + GIAM_TRU_GIA_CANH_BAN_THAN + (GIA_CANH_PHU_THUOC * numberOfDependencies);
 
