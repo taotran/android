@@ -52,21 +52,28 @@ public class MySQLiteHelper extends SQLiteOpenHelper
   private void deployDataBase(String dbName, String dbPath)
       throws IOException
   {
+
     InputStream localInputStream = this.mContext.getAssets().open(dbName);
-    OutputStream myOutput = new FileOutputStream(dbPath);
+    if (isDataChanged(localInputStream, dbPath)) {
+      OutputStream myOutput = new FileOutputStream(dbPath);
 
-    //transfer bytes from the inputfile to the outputfile
-    byte[] buffer = new byte[1024];
-    int length;
-    while ((length = localInputStream.read(buffer)) > 0) {
-      myOutput.write(buffer, 0, length);
+      //transfer bytes from the inputfile to the outputfile
+      byte[] buffer = new byte[1024];
+      int length;
+      while ((length = localInputStream.read(buffer)) > 0) {
+        myOutput.write(buffer, 0, length);
+      }
+
+      //Close the streams
+      myOutput.flush();
+      myOutput.close();
     }
-
-    //Close the streams
-    myOutput.flush();
-    myOutput.close();
     localInputStream.close();
+  }
 
+  boolean isDataChanged(InputStream assetLocalInputStream, String filePath) throws IOException
+  {
+    return !new File(filePath).exists() || assetLocalInputStream.available() != new FileInputStream(filePath).available();
   }
 
   @Override
@@ -102,7 +109,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
 
     final Cursor cursor = database.rawQuery(query, null);
 
-    City city = null;
+    City city;
 
     if (cursor.moveToFirst()) {
       do {
@@ -112,7 +119,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         cities.add(city);
       } while (cursor.moveToNext());
     }
-
+    cursor.close();
     return cities;
   }
 
@@ -125,7 +132,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
 
     final Cursor cursor = database.rawQuery(query, null);
 
-    DistrictGroupHeader district = null;
+    DistrictGroupHeader district;
 
     if (cursor.moveToFirst()) {
       do {
@@ -136,7 +143,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         districts.add(district);
       } while (cursor.moveToNext());
     }
-
+    cursor.close();
     return districts;
 
   }
@@ -151,7 +158,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
 
     final Cursor cursor = database.rawQuery(query, null);
 
-    DistrictDetail districtDetail = null;
+    DistrictDetail districtDetail;
 
     if (cursor.moveToFirst()) {
       do {
@@ -160,11 +167,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         districtDetail.setId(cursor.getInt(0));
         districtDetail.setAddress(cursor.getString(1));
         districtDetail.setContactInfo(cursor.getString(2));
-//        districtDetail.setDisplayValue(cursor.getString(1));
         districtDetails.add(districtDetail);
         districtDetailMap.put(cursor.getInt(4), districtDetails);
       } while (cursor.moveToNext());
     }
+    cursor.close();
 
     return districtDetailMap;
   }
@@ -177,7 +184,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
 
     final Cursor cursor = database.rawQuery(query, null);
 
-    QuestionAndAnswer questionAndAnswer = null;
+    QuestionAndAnswer questionAndAnswer;
 
     if (cursor.moveToFirst()) {
       do {
@@ -189,7 +196,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
         objects.add(questionAndAnswer);
       } while (cursor.moveToNext());
     }
-
+    cursor.close();
     return objects;
   }
 }

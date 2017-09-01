@@ -24,8 +24,10 @@
             android:text="Mức lương cơ sở"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView5" android:layout_alignBottom="@+id/editTextConfBaseSal"
-            android:layout_alignStart="@+id/textView4" android:textColor="@color/colorBlack"/>
+            android:id="@+id/textView5"
+            android:layout_alignBottom="@+id/editTextConfBaseSal"
+            android:layout_alignStart="@+id/textView4"
+            android:textColor="@color/colorBlack"/>
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,9 +35,12 @@
             android:maxLength="9"
             android:text="1,300,000"
             android:ems="10"
+            android:inputType="number"
+            android:digits="0123456789.,"
             android:id="@+id/editTextConfBaseSal"
             android:layout_marginStart="11dp"
-            android:layout_below="@+id/editTextConfCurrRate" android:layout_toEndOf="@+id/textView5"/>
+            android:layout_below="@+id/editTextConfCurrRate"
+            android:layout_toEndOf="@+id/textView5"/>
     <TextView
             android:text="BHXH(%)"
             android:layout_width="wrap_content"

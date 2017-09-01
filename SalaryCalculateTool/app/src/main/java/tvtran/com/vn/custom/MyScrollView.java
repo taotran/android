@@ -29,7 +29,7 @@ public class MyScrollView extends ScrollView
   @Override
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
   {
-    heightMeasureSpec = MeasureSpec.makeMeasureSpec(800, MeasureSpec.AT_MOST);
+    heightMeasureSpec = MeasureSpec.makeMeasureSpec(1000, MeasureSpec.AT_MOST);
     super.onMeasure(widthMeasureSpec, heightMeasureSpec);
   }
 }

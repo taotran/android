@@ -22,6 +22,8 @@
             android:layout_alignParentTop="true" android:layout_toEndOf="@+id/textView" android:text="0"
             android:maxLength="13"
             android:selectAllOnFocus="true"
+            android:inputType="number"
+            android:digits="0123456789.,"
     />
 
     <TextView
@@ -35,24 +37,13 @@
             android:layout_marginStart="5dp"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
+            android:inputType="numberDecimal"
             android:ems="10"
             android:layout_toEndOf="@+id/textViewUSD"
             android:id="@+id/salaryUSDEditText" android:text="0"
             android:maxLength="5"
             android:selectAllOnFocus="true"
     />
-
-    <!--<br.com.sapereaude.maskedEditText.MaskedEditText-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--mask:allowed_chars="0123456789"-->
-            <!--mask:mask="###,###"-->
-            <!---->
-            <!--android:id="@+id/salaryEditText"-->
-            <!--android:layout_marginStart="11dp" android:layout_alignParentTop="true"-->
-            <!--android:layout_toEndOf="@+id/textView"-->
-    <!--/>-->
     <TextView
             android:text="@string/no_of_dependence"
             android:layout_width="wrap_content"
